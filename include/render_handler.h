@@ -1,12 +1,12 @@
+#ifndef RENDER_HANDLER_H
+#define RENDER_HANDLER_H
+
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/freeglut.h>
 
 #include "cef_render_handler.h"
-
-#ifndef RENDER_HANDLER_H
-#define RENDER_HANDLER_H
 
 class RenderHandler : public CefRenderHandler {
   public:
@@ -20,13 +20,13 @@ class RenderHandler : public CefRenderHandler {
                  const void *_paint_buffer,
                  int _paint_width,
                  int _paint_height);
-    virtual void Draw(void) = 0;
+    void Draw(void);
 
   protected:
     unsigned int width;
     unsigned int height;
-    unsigned int paint_width;
-    unsigned int paint_height;
+    int paint_width;
+    int paint_height;
     unsigned char *paint_buffer;
 
   private:

@@ -1,9 +1,9 @@
 #include "include/cefui.h"
 
 
-CEFUI::CEFUI(RenderHandler *_render_handler) {
+CEFUI::CEFUI(int argc, char **argv, RenderHandler *_render_handler) {
     // Static Init Stuff... should this class be a singleton?
-    CefMainArgs args(0, nullptr);
+    CefMainArgs args(argc, argv);
     CefExecuteProcess(args, nullptr, NULL);
 
     CefSettings settings;
@@ -29,7 +29,7 @@ void CEFUI::load(const char* url) {
 
 void CEFUI::draw(void) {
     CefDoMessageLoopWork();
-    //renderHandler->draw();
+    renderHandler->Draw();
 }
 
 void CEFUI::reshape(int w, int h) {

@@ -1,10 +1,10 @@
+#ifndef CEFGUI_H
+#define CEFGUI_H
+
 #include "cef_app.h"
 
 #include "browser_client.h"
 #include "render_handler.h"
-
-#ifndef CEFGUI_H
-#define CEFGUI_H
 
 class CEFUI;
 
@@ -12,7 +12,7 @@ CEFUI* initCefgui(int argc, char** argv);
 
 class CEFUI {
   public:
-    CEFUI(RenderHandler *_render_handler = nullptr);
+    CEFUI(int argc, char **argv, RenderHandler *_render_handler = nullptr);
 
     void load(const char*);
     void draw(void);

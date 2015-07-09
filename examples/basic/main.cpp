@@ -3,43 +3,14 @@
 #include <SFML/OpenGL.hpp>
 
 #include "include/cefui.h"
-#include "include/render_handler.h"
 
-
-class GLRenderHandler : public RenderHandler {
-public:
-    GLRenderHandler(void) : RenderHandler() {
-        glGenTextures(1, &texture_handle);
-    }
-
-    ~GLRenderHandler(void) {
-        //
-    }
-
-    void Draw(void) {
-        glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, texture_handle);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, paint_width, paint_height,
-            0, GL_RGBA, GL_UNSIGNED_BYTE, paint_buffer);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-        glBindTexture(GL_TEXTURE_2D, 0);
-    }
-
-    GLuint GetTextureHandle(void) {
-        return texture_handle;
-    }
-
-private:
-    GLuint texture_handle;
-};
+#include "gl_render_handler.h"
 
 int main(int argc, char **argv) {
     // HUIOS Init
     GLRenderHandler *render_handler = new GLRenderHandler();
-    CEFUI *cefui = new CEFUI(render_handler);
+    CEFUI *cefui = new CEFUI(argc, argv, render_handler);
+    cefui->reshape(800, 600);
     cefui->load("http://www.google.com");
 
     // Request a 24-bits depth buffer when creating the window
@@ -93,6 +64,8 @@ int main(int argc, char **argv) {
 
         // Clear the depth buffer
         glClear(GL_DEPTH_BUFFER_BIT);
+
+        cefui->draw();
 
         // Finally, display the rendered frame on screen
         window.display();
