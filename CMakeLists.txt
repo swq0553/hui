@@ -1,0 +1,22 @@
+cmake_minimum_required(VERSION 2.6)
+project(cefui)
+
+set(CMAKE_CXX_FLAGS_DEBUG "-g -pg -ggdb -Wall -std=c++11 -Wno-reorder")
+set(CMAKE_CXX_FLAGS_RELEASE "-Wall -std=c++11 -Wno-reorder")
+set(CMAKE_SHARED_LINKER_FLAGS "-pg -g")
+add_definitions(-pg -Wall -ggdb -std=c++11)
+include_directories(/usr/local/ /usr/local/include/ ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+set(EXTLIBS sfml-graphics sfml-window sfml-system sfml-audio sfml-network GL
+    GLEW glut GLU Xrandr cef cef_dll_wrapper)
+
+set(SRCS
+    ./include/cefui.h
+    ./include/browser_client.h
+    ./include/render_handler.h
+    ./cefui.cpp
+    ./browser_client.cpp
+    ./render_handler.cpp)
+
+add_library(cefui ${SRCS})
+
+add_subdirectory(examples)
