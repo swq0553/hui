@@ -12,7 +12,7 @@ CEFUI* initCefgui(int argc, char** argv);
 
 class CEFUI {
   public:
-    CEFUI();
+    CEFUI(RenderHandler *_render_handler = nullptr);
 
     void load(const char*);
     void draw(void);

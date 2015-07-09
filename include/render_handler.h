@@ -12,30 +12,24 @@ class RenderHandler : public CefRenderHandler {
   public:
     RenderHandler();
 
-    bool initialized;
-
-    void init(void);
-    void draw(void);
-    void reshape(int, int);
-
+    void Reshape(unsigned int _width, unsigned int _height);
     bool GetViewRect(CefRefPtr<CefBrowser> browser, CefRect &rect);
-
     void OnPaint(CefRefPtr<CefBrowser> browser,
                  PaintElementType type,
-                 const RectList &dirtyRects,
-                 const void* buffer,
-                 int width,
-                 int height);
+                 const RectList &dirty_rects,
+                 const void *_paint_buffer,
+                 int _paint_width,
+                 int _paint_height);
+
+  protected:
+    unsigned int width;
+    unsigned int height;
+    unsigned int paint_width;
+    unsigned int paint_height;
+    unsigned char *paint_buffer;
 
   private:
-    int w, h;
-
-    GLuint program, vao, vbo, texture, positionLoc;
-
-    GLuint compileShader(GLenum, const char*);
-
     IMPLEMENT_REFCOUNTING(RenderHandler);
-
 };
 
 #endif
