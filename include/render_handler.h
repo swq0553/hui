@@ -10,7 +10,7 @@
 
 class RenderHandler : public CefRenderHandler {
   public:
-    RenderHandler();
+    RenderHandler(void);
 
     void Reshape(unsigned int _width, unsigned int _height);
     bool GetViewRect(CefRefPtr<CefBrowser> browser, CefRect &rect);
@@ -20,6 +20,7 @@ class RenderHandler : public CefRenderHandler {
                  const void *_paint_buffer,
                  int _paint_width,
                  int _paint_height);
+    virtual void Draw(void) = 0;
 
   protected:
     unsigned int width;

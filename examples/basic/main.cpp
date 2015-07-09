@@ -7,18 +7,41 @@
 
 
 class GLRenderHandler : public RenderHandler {
-    //
+public:
+    GLRenderHandler(void) : RenderHandler() {
+        glGenTextures(1, &texture_handle);
+    }
+
+    ~GLRenderHandler(void) {
+        //
+    }
+
+    void Draw(void) {
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, texture_handle);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, paint_width, paint_height,
+            0, GL_RGBA, GL_UNSIGNED_BYTE, paint_buffer);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
+    GLuint GetTextureHandle(void) {
+        return texture_handle;
+    }
+
+private:
+    GLuint texture_handle;
 };
 
+int main(int argc, char **argv) {
+    // HUIOS Init
+    GLRenderHandler *render_handler = new GLRenderHandler();
+    CEFUI *cefui = new CEFUI(render_handler);
+    cefui->load("http://www.google.com");
 
-////////////////////////////////////////////////////////////
-/// Entry point of application
-///
-/// \return Application exit code
-///
-////////////////////////////////////////////////////////////
-int main()
-{
     // Request a 24-bits depth buffer when creating the window
     sf::ContextSettings contextSettings;
     contextSettings.depthBits = 24;

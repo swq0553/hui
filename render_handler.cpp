@@ -1,7 +1,7 @@
 #include <fstream>
 #include "include/render_handler.h"
 
-RenderHandler::RenderHandler() {
+RenderHandler::RenderHandler(void) {
     width = 0;
     height = 0;
     paint_width = 0;
@@ -32,4 +32,5 @@ void RenderHandler::OnPaint(CefRefPtr<CefBrowser> browser,
     paint_width = _paint_width;
     paint_height = _paint_height;
     memcpy(paint_buffer, _paint_buffer, sizeof(unsigned char) * paint_width * paint_height * 4);
+    Draw();
 }

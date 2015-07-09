@@ -7,7 +7,7 @@ CEFUI::CEFUI(RenderHandler *_render_handler) {
     CefExecuteProcess(args, nullptr, NULL);
 
     CefSettings settings;
-    CefString(&settings.locales_dir_path) = "/usr/local/lib/locales";
+    //CefString(&settings.locales_dir_path) = "/usr/local/lib/locales";
 
     CefInitialize(args, settings, nullptr, NULL);
 
