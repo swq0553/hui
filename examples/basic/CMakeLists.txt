@@ -1,4 +1,5 @@
-project(cefui)
+project(huios)
 include_directories(/usr/local/ /usr/local/include/ ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
-add_executable(cefui_basic main.cpp gl_render_handler.h gl_render_handler.cpp)
-target_link_libraries(cefui_basic cefui ${EXTLIBS})
+add_executable(huios_basic main.cpp gl_render_handler.h gl_render_handler.cpp)
+add_dependencies(huios_basic cef_dll_wrapper)
+target_link_libraries(huios_basic huios ${EXTLIBS})

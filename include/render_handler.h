@@ -21,7 +21,6 @@ class RenderHandler : public CefRenderHandler {
                  int _paint_width,
                  int _paint_height);
     void Draw(void);
-
   protected:
     unsigned int width;
     unsigned int height;
@@ -29,7 +28,6 @@ class RenderHandler : public CefRenderHandler {
     int paint_height;
     unsigned char *paint_buffer;
 
-  private:
     IMPLEMENT_REFCOUNTING(RenderHandler);
 };
 
