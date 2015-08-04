@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
     GLRenderHandler *render_handler = new GLRenderHandler();
     HUIOS *cefui = new HUIOS(argc, argv, window.getSystemHandle(), render_handler);
     cefui->reshape(800, 600);
-//    cefui->load("http://www.google.com");
+    cefui->load("http://www.google.com");
 
     // Enable Z-buffer read and write
 //    glEnable(GL_DEPTH_TEST);
