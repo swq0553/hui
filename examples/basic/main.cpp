@@ -18,14 +18,14 @@ int main(int argc, char **argv) {
 
     // HUIOS Init
     GLRenderHandler *render_handler = new GLRenderHandler();
-    HUIOS *cefui = new HUIOS(argc, argv, window.getSystemHandle(), render_handler);
-    cefui->reshape(800, 600);
-    cefui->load("http://www.google.com");
+    HUIOS *huios = new HUIOS(argc, argv, window.getSystemHandle(), render_handler);
+    huios->reshape(800, 600);
+    huios->load("http://www.google.com");
 
     // Enable Z-buffer read and write
 //    glEnable(GL_DEPTH_TEST);
 //    glDepthMask(GL_TRUE);
-//    glClearDepth(1.f);
+//    glClearDepth(1.f);e
 
     // Disable lighting
 //    glDisable(GL_LIGHTING);
@@ -65,7 +65,7 @@ int main(int argc, char **argv) {
 //        // Clear the depth buffer
 //        glClear(GL_DEPTH_BUFFER_BIT);
 
-        cefui->draw();
+        huios->draw();
 
         // Finally, display the rendered frame on screen
         window.display();
