@@ -165,7 +165,8 @@ int main(int argc, char **argv) {
             "uniform sampler2D gui_texture;"
             "out vec4 fragment_output;"
             "void main() {"
-            "    fragment_output = texture(gui_texture, vec2(texcoord.x, 1.0 - texcoord.y));"
+            "    vec4 gui_output = texture(gui_texture, vec2(texcoord.x, 1.0 - texcoord.y));"
+            "    fragment_output = vec4(gui_output.b, gui_output.g, gui_output.r, gui_output.a);"
             "}";
 
     vertexshader = glCreateShader(GL_VERTEX_SHADER);
