@@ -142,8 +142,8 @@ int main(int argc, char **argv) {
     glGenBuffers(1, &vbo[1]);
     glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
     glBufferData(GL_ARRAY_BUFFER, count, texcoords, GL_STATIC_DRAW);
-    glVertexAttribPointer((GLuint)2, 4, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(2);
+    glVertexAttribPointer((GLuint)1, 4, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(1);
 
     /* Read our shaders into the appropriate buffers */
     vertexsource = "#version 130\n"
@@ -165,9 +165,7 @@ int main(int argc, char **argv) {
             "uniform sampler2D gui_texture;"
             "out vec4 fragment_output;"
             "void main() {"
-//            "    vec4 gui_output = texture(gui_texture, texcoord);"
-//            "    fragment_output = mod(gui_output, vec4(0.1, 0.1, 0.1, 0.0));"
-            "    fragment_output = texture(gui_texture, texcoord);"
+            "    fragment_output = texture(gui_texture, vec2(texcoord.x, 1.0 - texcoord.y));"
             "}";
 
     vertexshader = glCreateShader(GL_VERTEX_SHADER);
