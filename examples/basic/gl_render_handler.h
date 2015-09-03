@@ -1,6 +1,13 @@
 #ifndef GL_RENDER_HANDLER_H
 #define GL_RENDER_HANDLER_H
 
+#include <GL/glew.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/freeglut.h>
+
+#include <SFML/Graphics.hpp>
+
 #include "include/render_handler.h"
 
 class GLRenderHandler : public RenderHandler {

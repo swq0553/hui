@@ -30,7 +30,7 @@ HUIOS::HUIOS(unsigned int _window_handle, RenderHandler *_render_handler) {
     renderHandler = _render_handler;
 
     client = new BrowserClient(renderHandler);
-    browser = CefBrowserHost::CreateBrowserSync(windowInfo, client.get(), "", browser_settings, nullptr);
+    browser = CefBrowserHost::CreateBrowserSync(windowInfo, client.get(), "http://google.com", browser_settings, nullptr);
 }
 
 void HUIOS::load(const char* url) {

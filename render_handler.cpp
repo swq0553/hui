@@ -40,5 +40,5 @@ void RenderHandler::OnPaint(CefRefPtr<CefBrowser> browser,
 }
 
 void RenderHandler::Draw(void) {
-    //
+    std::cout << "Drawing Here?" << std::endl;
 }
