@@ -15,7 +15,6 @@ class BrowserClient : public CefClient {
       CefRefPtr<CefRenderHandler> handler;
 
       IMPLEMENT_REFCOUNTING(BrowserClient);
-
 };
 
 #endif

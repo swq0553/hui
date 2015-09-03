@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
-project(cefui)
+project(huios)
 
 set(CMAKE_CXX_FLAGS_DEBUG "-g -pg -ggdb -Wall -std=c++11 -Wno-reorder")
 set(CMAKE_CXX_FLAGS_RELEASE "-Wall -std=c++11 -Wno-reorder")
@@ -10,13 +10,13 @@ set(EXTLIBS sfml-graphics sfml-window sfml-system sfml-audio sfml-network GL
     GLEW glut GLU Xrandr cef cef_dll_wrapper)
 
 set(SRCS
-    ./include/cefui.h
+    ./include/huios.h
     ./include/browser_client.h
     ./include/render_handler.h
-    ./cefui.cpp
+    ./huios.cpp
     ./browser_client.cpp
     ./render_handler.cpp)
 
-add_library(cefui ${SRCS})
+add_library(huios ${SRCS})
 
 add_subdirectory(examples)
