@@ -3,10 +3,10 @@
 #include "include/render_handler.h"
 
 RenderHandler::RenderHandler(void) {
-    width = 800;
-    height = 600;
-    paint_width = 800;
-    paint_height = 600;
+    width = 1280;
+    height = 720;
+    paint_width = 1280;
+    paint_height = 720;
     paint_buffer = new unsigned char[paint_width * paint_height * 4];
 }
 

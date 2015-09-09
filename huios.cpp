@@ -1,5 +1,7 @@
 #include "include/huios.h"
 
+#include <iostream>
+
 int HUIOS::Init(int argc, char **argv) {
     CefMainArgs args(argc, argv);
     int exit_code = CefExecuteProcess(args, nullptr, NULL);
@@ -33,25 +35,25 @@ HUIOS::HUIOS(unsigned int _window_handle, RenderHandler *_render_handler) {
     browser = CefBrowserHost::CreateBrowserSync(windowInfo, client.get(), "http://google.com", browser_settings, nullptr);
 }
 
-void HUIOS::load(const char* url) {
+void HUIOS::Load(const char* url) {
     browser->GetMainFrame()->LoadURL(url);
 }
 
-void HUIOS::update(void) {
-//     CefRunMessageLoop();
+void HUIOS::Update(void) {
+    browser->GetHost()->SetFocus(true);
     CefDoMessageLoopWork();
 }
 
-void HUIOS::draw(void) {
+void HUIOS::Draw(void) {
     renderHandler->Draw();
 }
 
-void HUIOS::reshape(int w, int h) {
+void HUIOS::Reshape(int w, int h) {
     renderHandler->Reshape(w, h);
     browser->GetHost()->WasResized();
 }
 
-void HUIOS::mouseMove(int x, int y) {
+void HUIOS::MouseMove(int x, int y) {
     mouseX = x;
     mouseY = y;
 
@@ -62,25 +64,65 @@ void HUIOS::mouseMove(int x, int y) {
     browser->GetHost()->SendMouseMoveEvent(event, false);
 }
 
-void HUIOS::mouseClick(int btn, int state) {
+void HUIOS::MouseButtonPress(MouseButton btn) {
     CefMouseEvent event;
     event.x = mouseX;
     event.y = mouseY;
 
-    bool mouseUp = state == 0;
     CefBrowserHost::MouseButtonType btnType = MBT_LEFT;
-    browser->GetHost()->SendMouseClickEvent(event, btnType, mouseUp, 1);
+    if (btn == MB_RIGHT) {
+        btnType = MBT_RIGHT;
+    } else if (btn == MB_MIDDLE) {
+        btnType = MBT_MIDDLE;
+    }
+
+    browser->GetHost()->SendMouseClickEvent(event, btnType, false, 1);
 }
 
-void HUIOS::keyPress(int key) {
-    CefKeyEvent event;
-    event.native_key_code = key;
-    event.type = KEYEVENT_KEYDOWN;
+void HUIOS::MouseButtonRelease(MouseButton btn) {
+    CefMouseEvent event;
+    event.x = mouseX;
+    event.y = mouseY;
 
+    CefBrowserHost::MouseButtonType btnType = MBT_LEFT;
+    if (btn == MB_RIGHT) {
+        btnType = MBT_RIGHT;
+    } else if (btn == MB_MIDDLE) {
+        btnType = MBT_MIDDLE;
+    }
+
+    browser->GetHost()->SendMouseClickEvent(event, btnType, true, 1);
+}
+
+//void HUIOS::KeyPress(int key) {
+//    CefKeyEvent event;
+//    event.unmodified_character = key;
+//    event.character = key;
+//    event.native_key_code = key;
+//    event.type = KEYEVENT_KEYDOWN;
+
+//    browser->GetHost()->SendKeyEvent(event);
+//}
+
+//void HUIOS::KeyRelease(int key) {
+//    CefKeyEvent event;
+//    event.unmodified_character = key;
+//    event.character = key;
+//    event.native_key_code = key;
+//    event.type = KEYEVENT_KEYUP;
+//    browser->GetHost()->SendKeyEvent(event);
+//}
+
+void HUIOS::KeyChar(int key) {
+    CefKeyEvent event;
+    event.unmodified_character = key;
+    event.character = key;
+    event.native_key_code = key;
+    event.type = KEYEVENT_CHAR;
     browser->GetHost()->SendKeyEvent(event);
 }
 
-void HUIOS::executeJS(const char* command) {
+void HUIOS::ExecuteJS(const char* command) {
     CefRefPtr<CefFrame> frame = browser->GetMainFrame();
     frame->ExecuteJavaScript(command, frame->GetURL(), 0);
 

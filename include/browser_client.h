@@ -4,15 +4,18 @@
 #include "cef_client.h"
 
 #include "render_handler.h"
+#include "request_handler.h"
 
 class BrowserClient : public CefClient {
     public:
-      BrowserClient(RenderHandler*);
+      BrowserClient(RenderHandler *_render_handler);
 
-      virtual CefRefPtr<CefRenderHandler> GetRenderHandler();
+      virtual CefRefPtr<CefRenderHandler> GetRenderHandler(void);
+      virtual CefRefPtr<CefRequestHandler> GetRequestHandler(void);
 
     private:
-      CefRefPtr<CefRenderHandler> handler;
+      CefRefPtr<CefRenderHandler> render_handler;
+      CefRefPtr<CefRequestHandler> request_handler;
 
       IMPLEMENT_REFCOUNTING(BrowserClient);
 };

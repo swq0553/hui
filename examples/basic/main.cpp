@@ -1,7 +1,6 @@
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
-//#include <glm/core/func_geometric.hpp>
 #include <glm/gtc/matrix_access.hpp>
 #include <glm/gtc/matrix_integer.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
@@ -9,7 +8,6 @@
 #include <glm/gtc/noise.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/random.hpp>
-//#include <glm/gtc/swizzle.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/transform.hpp>
@@ -87,15 +85,15 @@ int main(int argc, char **argv) {
     contextSettings.depthBits = 24;
 
     // Create the main window
-    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML graphics with OpenGL", sf::Style::Default, contextSettings);
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "SFML graphics with OpenGL", sf::Style::Default, contextSettings);
     window.setVerticalSyncEnabled(true);
     window.setActive();
 
     // HUIOS Init
     GLRenderHandler *render_handler = new GLRenderHandler();
     HUIOS *huios = new HUIOS(window.getSystemHandle(), render_handler);
-    huios->reshape(800, 600);
-    huios->load("http://www.google.com");
+    huios->Reshape(1280, 720);
+    huios->Load("http://www.google.com");
 
     // Enable Z-buffer read and write
     glDisable(GL_DEPTH_TEST);
@@ -195,9 +193,9 @@ int main(int argc, char **argv) {
     model_matrix_location = glGetUniformLocation(shaderprogram, "model_matrix");
     gui_texture_location = glGetUniformLocation(shaderprogram, "gui_texture");
 
-    glm::mat4 projection_matrix = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
+    glm::mat4 projection_matrix = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f);
     glm::mat4 view_matrix = glm::mat4(1.0f);
-    glm::mat4 model_matrix = glm::scale(glm::mat4(1.0f), glm::vec3(800.0, 600.0, 1.0));
+    glm::mat4 model_matrix = glm::scale(glm::mat4(1.0f), glm::vec3(1280.0, 720.0, 1.0));
 
     // Start game loop
     while (window.isOpen()) {
@@ -218,14 +216,41 @@ int main(int argc, char **argv) {
             if (event.type == sf::Event::Resized) {
                 glViewport(0, 0, event.size.width, event.size.height);
             }
+
+            if (event.type == sf::Event::MouseMoved) {
+                huios->MouseMove(event.mouseMove.x, event.mouseMove.y);
+            }
+
+            if (event.type == sf::Event::MouseButtonPressed) {
+                huios->MouseButtonPress(HUIOS::MB_LEFT);
+            }
+
+            if (event.type == sf::Event::MouseButtonReleased) {
+                huios->MouseButtonRelease(HUIOS::MB_LEFT);
+            }
+
+//            if (event.type == sf::Event::KeyPressed) {
+//                huios->KeyPress(event.key.code);
+//            }
+
+//            if (event.type == sf::Event::KeyReleased) {
+//                huios->KeyRelease(event.key.code);
+//            }
+
+            if (event.type == sf::Event::TextEntered) {
+                std::cout << "Unicode: " << event.text.unicode << std::endl;
+//                huios->KeyPress(event.text.unicode);
+//                huios->KeyRelease(event.text.unicode);
+                huios->KeyChar(event.text.unicode);
+            }
        }
 
         // Clear the depth buffer
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-        huios->update();
-        huios->draw();
+        huios->Update();
+        huios->Draw();
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, render_handler->GetTextureHandle());

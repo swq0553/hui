@@ -13,9 +13,11 @@ set(SRCS
     ./include/huios.h
     ./include/browser_client.h
     ./include/render_handler.h
+    ./include/request_handler.h
     ./huios.cpp
     ./browser_client.cpp
-    ./render_handler.cpp)
+    ./render_handler.cpp
+    ./request_handler.cpp)
 
 add_library(huios ${SRCS})
 

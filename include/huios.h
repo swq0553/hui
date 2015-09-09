@@ -12,21 +12,32 @@ HUIOS* initCefgui(int argc, char** argv);
 
 class HUIOS {
     public:
+        enum MouseButton {
+            MB_LEFT = 0,
+            MB_RIGHT,
+            MB_MIDDLE,
+            MB_BACK,
+            MB_FORWARD
+        };
+
         static int Init(int argc, char **argv);
         static void Shutdown(void);
 
         HUIOS(unsigned int _window_handle, RenderHandler *_render_handler = nullptr);
 
-        void load(const char*);
-        void update(void);
-        void draw(void);
-        void reshape(int, int);
+        void Load(const char*);
+        void Update(void);
+        void Draw(void);
+        void Reshape(int _width, int _height);
 
-        void mouseMove(int, int);
-        void mouseClick(int, int);
-        void keyPress(int);
+        void MouseMove(int _x, int _y);
+        void MouseButtonPress(MouseButton _button);
+        void MouseButtonRelease(MouseButton _button);
+        void KeyChar(int key);
+//        void KeyPress(int key);
+//        void KeyRelease(int key);
 
-        void executeJS(const char*);
+        void ExecuteJS(const char*);
 
     private:
         int mouseX, mouseY;
