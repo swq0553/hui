@@ -97,6 +97,29 @@ Response *RESTRoute::Delete(std::string id) {
 Response *RESTRoute::Call(std::string url, std::string method,
                           std::vector<std::pair<std::string, std::string> > get,
                           std::vector<std::pair<std::string, std::string> > post) {
+    std::smatch matches;
+    bool result = std::regex_search(url, matches, route);
+    std::string id = "";
+    if (result) {
+        std::string match = matches[0];
+        int index = url.find(match);
+        if (index != -1) {
+            int start_index = index + match.size() + 1;
+            if (start_index < url.size()) {
+                id = url.substr(start_index);
+            }
+        }
+    }
+
+    if (method == "GET") {
+        return Get(id);
+    } else if (method == "POST") {
+        return Post(post);
+    } else if (method == "PUT") {
+        return Put(id, post);
+    } else if (method == "DELETE") {
+        return Delete(id);
+    }
     return nullptr;
 }
 
@@ -129,18 +152,6 @@ Response *JSONRESTRoute::Call(std::string url, std::string method,
 }
 
 
-//ResourceHandler::ResourceHandler(std::string _url, std::string _method,
-//                                 std::vector<std::pair<std::string, std::string> > _get,
-//                                 std::vector<std::pair<std::string, std::string> > _post,
-//                                 Route *_route) {
-//    url = _url;
-//    method = _method;
-//    get = _get;
-//    post = _post;
-//    route = _route;
-//}
-
-
 RequestHandler::RequestHandler(void) {
     routes.clear();
 }
@@ -149,7 +160,6 @@ CefRefPtr<CefResourceHandler> RequestHandler::GetResourceHandler(CefRefPtr<CefBr
                                                                  CefRefPtr<CefFrame> frame,
                                                                  CefRefPtr<CefRequest> request) {
     // Evaluate if match, if so, return new ResourceHandler();
-//    std::cout << "URL: " << request->GetURL().ToString() << std::endl;
     std::string url = request->GetURL().ToString();
     int split_index = url.find_first_of('?');
     std::string base_url;
@@ -172,11 +182,6 @@ CefRefPtr<CefResourceHandler> RequestHandler::GetResourceHandler(CefRefPtr<CefBr
         }
         ++route_iter;
     }
-    std::cout << "URL: " << base_url << std::endl;
-    std::cout << "Found: " << found << std::endl;
-
-//    std::cout << "Base URL: " << base_url << std::endl;
-//    std::cout << "Method: " << request->GetMethod().ToString() << std::endl;
 
     if (found) {
         std::string method = request->GetMethod().ToString();
@@ -195,7 +200,6 @@ CefRefPtr<CefResourceHandler> RequestHandler::GetResourceHandler(CefRefPtr<CefBr
         std::vector<std::pair<std::string, std::string> > post;
         CefRefPtr<CefPostData> post_data = request->GetPostData();
         if (post_data.get() != nullptr) {
-            std::cout << "WAAAA?" << std::endl;
             CefPostData::ElementVector post_elements;
             post_data->GetElements(post_elements);
             CefPostData::ElementVector::iterator post_elem_iter = post_elements.begin();
@@ -224,7 +228,6 @@ CefRefPtr<CefResourceHandler> RequestHandler::GetResourceHandler(CefRefPtr<CefBr
         if (result == nullptr) {
             return nullptr;
         }
-        std::cout << result->GetMimeType() << ": " << result->GetContent() << std::endl;
         CefRefPtr<CefStreamReader> result_stream = CefStreamReader::CreateForData(
             static_cast<void*>(const_cast<char*>(result->GetContent().c_str())),
             result->GetContent().size());
@@ -237,6 +240,5 @@ CefRefPtr<CefResourceHandler> RequestHandler::GetResourceHandler(CefRefPtr<CefBr
 }
 
 void RequestHandler::RegisterRoute(Route *route) {
-    std::cout << "Pushing Route Handler" << std::endl;
     routes.push_back(route);
 }

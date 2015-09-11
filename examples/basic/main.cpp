@@ -39,6 +39,18 @@ public:
     }
 };
 
+class MyRESTRoute : public RESTRoute {
+public:
+    MyRESTRoute(void) : RESTRoute(std::regex("basic_rest")) {
+        //
+    }
+
+    Response *Get(std::string id) {
+        std::cout << "ID: " << id << std::endl;
+        return new Response("text/html", "Weeeeeeee");
+    }
+};
+
 
 bool ErrorCheck(std::string prefix) {
     GLenum result = glGetError();
@@ -110,6 +122,7 @@ int main(int argc, char **argv) {
     GLRenderHandler *render_handler = new GLRenderHandler();
     HUIOS *huios = new HUIOS(window.getSystemHandle(), render_handler);
     huios->RegisterRoute(new MyRoute());
+    huios->RegisterRoute(new MyRESTRoute());
     huios->Reshape(1280, 720);
     huios->Load("file:///home/douglas/Projects/huios/examples/basic/assets/index.html");
 

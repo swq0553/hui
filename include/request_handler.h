@@ -70,23 +70,6 @@ private:
                            std::vector<std::pair<std::string, std::string> > post);
 };
 
-//class ResourceHandler : public CefResourceHandler {
-//public:
-//    ResourceHandler(std::string _url, std::string _method,
-//                    std::vector<std::pair<std::string, std::string> > _get,
-//                    std::vector<std::pair<std::string, std::string> > _post,
-//                    Route *_route);
-
-//private:
-//    std::string url;
-//    std::string method;
-//    std::vector<std::pair<std::string, std::string> > get;
-//    std::vector<std::pair<std::string, std::string> > post;
-//    Route *route;
-
-//    IMPLEMENT_REFCOUNTING(ResourceHandler);
-//};
-
 class RequestHandler : public CefRequestHandler {
     public:
         RequestHandler(void);
@@ -94,12 +77,6 @@ class RequestHandler : public CefRequestHandler {
         CefRefPtr<CefResourceHandler> GetResourceHandler(CefRefPtr<CefBrowser> browser,
                                                          CefRefPtr<CefFrame> frame,
                                                          CefRefPtr<CefRequest> request);
-//        cef_return_value_t OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
-//                                                CefRefPtr<CefRequest> request, CefRefPtr<CefRequestCallback> callback);
-//        void OnResourceRedirect(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
-//                                const CefString& old_url, CefString& new_url);
-//        bool OnResourceResponse(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
-//                                CefRefPtr<CefRequest> request, CefRefPtr<CefResponse> response);
         void RegisterRoute(Route *route);
     private:
         std::vector<Route *> routes;
