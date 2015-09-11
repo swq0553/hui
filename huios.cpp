@@ -1,17 +1,20 @@
 #include "include/huios.h"
+#include "include/browser_app.h"
 
 #include <iostream>
 
 int HUIOS::Init(int argc, char **argv) {
     CefMainArgs args(argc, argv);
-    int exit_code = CefExecuteProcess(args, nullptr, NULL);
+    CefRefPtr<App> app(new App);
+    int exit_code = CefExecuteProcess(args, app.get(), NULL);
     if (exit_code >= 0) {
         return exit_code;
     }
 
     CefSettings settings;
+    settings.remote_debugging_port = 8088;
     //CefString(&settings.locales_dir_path) = "/usr/local/lib/locales";
-    CefInitialize(args, settings, nullptr, NULL);
+    CefInitialize(args, settings, app.get(), NULL);
 
     return exit_code;
 }
@@ -32,7 +35,7 @@ HUIOS::HUIOS(unsigned int _window_handle, RenderHandler *_render_handler) {
     renderHandler = _render_handler;
 
     client = new BrowserClient(renderHandler);
-    browser = CefBrowserHost::CreateBrowserSync(windowInfo, client.get(), "http://google.com", browser_settings, nullptr);
+    browser = CefBrowserHost::CreateBrowserSync(windowInfo, client.get(), "", browser_settings, nullptr);
 }
 
 void HUIOS::Load(const char* url) {
@@ -130,5 +133,9 @@ void HUIOS::ExecuteJS(const char* command) {
     CefRect rect;
     renderHandler->GetViewRect(browser, rect);
     browser->GetHost()->Invalidate(PET_VIEW);
+}
+
+void HUIOS::RegisterRoute(Route *route) {
+    static_cast<RequestHandler *>(client->GetRequestHandler().get())->RegisterRoute(route);
 }
 

@@ -91,7 +91,8 @@ class RequestHandler : public CefRequestHandler {
     public:
         RequestHandler(void);
 
-        CefRefPtr<CefResourceHandler> GetResourceHandler(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
+        CefRefPtr<CefResourceHandler> GetResourceHandler(CefRefPtr<CefBrowser> browser,
+                                                         CefRefPtr<CefFrame> frame,
                                                          CefRefPtr<CefRequest> request);
 //        cef_return_value_t OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
 //                                                CefRefPtr<CefRequest> request, CefRefPtr<CefRequestCallback> callback);
@@ -99,6 +100,7 @@ class RequestHandler : public CefRequestHandler {
 //                                const CefString& old_url, CefString& new_url);
 //        bool OnResourceResponse(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
 //                                CefRefPtr<CefRequest> request, CefRefPtr<CefResponse> response);
+        void RegisterRoute(Route *route);
     private:
         std::vector<Route *> routes;
 

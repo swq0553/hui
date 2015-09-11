@@ -39,6 +39,8 @@ class HUIOS {
 
         void ExecuteJS(const char*);
 
+        void RegisterRoute(Route *route);
+
     private:
         int mouseX, mouseY;
         unsigned int window_handle;

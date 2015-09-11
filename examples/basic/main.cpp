@@ -23,6 +23,23 @@
 #include "gl_render_handler.h"
 
 
+class MyRoute : public Route {
+public:
+    MyRoute(void) : Route(std::regex("basic_html")) {
+        //
+    }
+
+
+    Response *HandleRequest(std::string url, std::string method,
+                            std::vector<std::pair<std::string, std::string> > get,
+                            std::vector<std::pair<std::string, std::string> > post) {
+        std::cout << "URL: " << url << std::endl;
+        std::cout << "Method: " << method << std::endl;
+        return new Response("text/html", "Made it");
+    }
+};
+
+
 bool ErrorCheck(std::string prefix) {
     GLenum result = glGetError();
     switch (result){
@@ -92,8 +109,9 @@ int main(int argc, char **argv) {
     // HUIOS Init
     GLRenderHandler *render_handler = new GLRenderHandler();
     HUIOS *huios = new HUIOS(window.getSystemHandle(), render_handler);
+    huios->RegisterRoute(new MyRoute());
     huios->Reshape(1280, 720);
-    huios->Load("http://www.google.com");
+    huios->Load("file:///home/douglas/Projects/huios/examples/basic/assets/index.html");
 
     // Enable Z-buffer read and write
     glDisable(GL_DEPTH_TEST);

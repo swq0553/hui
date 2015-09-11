@@ -146,8 +146,10 @@ RequestHandler::RequestHandler(void) {
 }
 
 CefRefPtr<CefResourceHandler> RequestHandler::GetResourceHandler(CefRefPtr<CefBrowser> browser,
-                                                                 CefRefPtr<CefFrame> frame, CefRefPtr<CefRequest> request) {
+                                                                 CefRefPtr<CefFrame> frame,
+                                                                 CefRefPtr<CefRequest> request) {
     // Evaluate if match, if so, return new ResourceHandler();
+//    std::cout << "URL: " << request->GetURL().ToString() << std::endl;
     std::string url = request->GetURL().ToString();
     int split_index = url.find_first_of('?');
     std::string base_url;
@@ -164,11 +166,17 @@ CefRefPtr<CefResourceHandler> RequestHandler::GetResourceHandler(CefRefPtr<CefBr
     std::vector<Route *>::iterator route_iter = routes.begin();
     while (route_iter != routes.end() && !found) {
         route = (*route_iter);
-        if (std::regex_match(base_url, route->RouteRegex())) {
+        std::smatch match;
+        if (std::regex_search(base_url, match, route->RouteRegex())) {
             found = true;
         }
         ++route_iter;
     }
+    std::cout << "URL: " << base_url << std::endl;
+    std::cout << "Found: " << found << std::endl;
+
+//    std::cout << "Base URL: " << base_url << std::endl;
+//    std::cout << "Method: " << request->GetMethod().ToString() << std::endl;
 
     if (found) {
         std::string method = request->GetMethod().ToString();
@@ -186,99 +194,49 @@ CefRefPtr<CefResourceHandler> RequestHandler::GetResourceHandler(CefRefPtr<CefBr
 
         std::vector<std::pair<std::string, std::string> > post;
         CefRefPtr<CefPostData> post_data = request->GetPostData();
-        CefPostData::ElementVector post_elements;
-        post_data->GetElements(post_elements);
-        CefPostData::ElementVector::iterator post_elem_iter = post_elements.begin();
-        while (post_elem_iter != post_elements.end()) {
-            std::string element_data;
-            std::string element_type;
-            CefRefPtr<CefPostDataElement> element = (*post_elem_iter);
-            if (element->GetType() == PDE_TYPE_EMPTY) {
-                element_type = "empty";
-            } else if (element->GetType() == PDE_TYPE_BYTES) {
-                size_t byte_count = element->GetBytesCount();
-                char *bytes = new char[byte_count];
-                element->GetBytes(byte_count, (void *)(bytes));
-                element_data = std::string(bytes);
-                element_type = "string";
-            } else if (element->GetType() == PDE_TYPE_FILE) {
-                element_data = element->GetFile().ToString();
-                element_type = "file";
+        if (post_data.get() != nullptr) {
+            std::cout << "WAAAA?" << std::endl;
+            CefPostData::ElementVector post_elements;
+            post_data->GetElements(post_elements);
+            CefPostData::ElementVector::iterator post_elem_iter = post_elements.begin();
+            while (post_elem_iter != post_elements.end()) {
+                std::string element_data;
+                std::string element_type;
+                CefRefPtr<CefPostDataElement> element = (*post_elem_iter);
+                if (element->GetType() == PDE_TYPE_EMPTY) {
+                    element_type = "empty";
+                } else if (element->GetType() == PDE_TYPE_BYTES) {
+                    size_t byte_count = element->GetBytesCount();
+                    char *bytes = new char[byte_count];
+                    element->GetBytes(byte_count, (void *)(bytes));
+                    element_data = std::string(bytes);
+                    element_type = "string";
+                } else if (element->GetType() == PDE_TYPE_FILE) {
+                    element_data = element->GetFile().ToString();
+                    element_type = "file";
+                }
+                post.push_back(std::pair<std::string, std::string>(element_type, element_data));
+                ++post_elem_iter;
             }
-            post.push_back(std::pair<std::string, std::string>(element_type, element_data));
-            ++post_elem_iter;
         }
 
         Response *result = route->Call(base_url, method, get, post);
         if (result == nullptr) {
             return nullptr;
         }
+        std::cout << result->GetMimeType() << ": " << result->GetContent() << std::endl;
         CefRefPtr<CefStreamReader> result_stream = CefStreamReader::CreateForData(
             static_cast<void*>(const_cast<char*>(result->GetContent().c_str())),
             result->GetContent().size());
-        return new CefStreamResourceHandler(result->GetMimeType(), result_stream);
+        CefResponse::HeaderMap headers;
+        headers.insert(std::pair<CefString, CefString>("Access-Control-Allow-Origin", "*"));
+        return new CefStreamResourceHandler(200, "200 OK", result->GetMimeType(), headers, result_stream);
     }
+
     return nullptr;
 }
 
-//cef_return_value_t RequestHandler::OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
-//                                          CefRefPtr<CefRequest> request, CefRefPtr<CefRequestCallback> callback) {
-//    REQUIRE_IO_THREAD();
-//    std::cout << "OnBeforeResourceLoad" << std::endl;
-//    std::cout << "URL: " << request->GetURL().ToString() << std::endl;
-//    return RV_CONTINUE;
-//}
-
-//void RequestHandler::OnResourceRedirect(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
-//                                        const CefString& old_url, CefString& new_url) {
-//    std::cout << "OnResourceRedirect" << std::endl;
-//    std::cout << "Old URL: " << old_url.ToString() << std::endl;
-//    std::cout << "New URL: " << new_url.ToString() << std::endl;
-//}
-
-//bool RequestHandler::OnResourceResponse(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
-//                                        CefRefPtr<CefRequest> request, CefRefPtr<CefResponse> response) {
-//    std::cout << "OnResourceResponse" << std::endl;
-//    std::cout << "URL: " << request->GetURL().ToString() << std::endl;
-////    std::string url = request->GetURL().ToString();
-////    std::string method = request->GetMethod().ToString();
-
-////    std::vector<std::pair<std::string, std::string> > get;
-////    std::string get_params = url.substr(url.find_first_of('?'));
-////    std::vector<std::string> get_param_chunks = split(get_params, '&');
-////    std::vector<std::string>::iterator get_param_chunk_iter = get_param_chunks.begin();
-////    while (get_param_chunk_iter != get_param_chunks.end()) {
-////        std::string chunk = (*get_param_chunk_iter);
-////        std::string name = chunk.substr(0, chunk.find_first_of('='));
-////        std::string value = chunk.substr(chunk.find_first_of('='));
-////        get.push_back(std::pair<std::string, std::string>(name, value));
-////        ++get_param_chunk_iter;
-////    }
-
-////    std::vector<std::pair<std::string, std::string> > post;
-////    CefRefPtr<CefPostData> post_data = request->GetPostData();
-////    CefPostData::ElementVector post_elements;
-////    post_data->GetElements(post_elements);
-////    CefPostData::ElementVector::iterator post_elem_iter = post_elements.begin();
-////    while (post_elem_iter != post_elements.end()) {
-////        std::string element_data;
-////        std::string element_type;
-////        CefRefPtr<CefPostDataElement> element = (*post_elem_iter);
-////        if (element->GetType() == PDE_TYPE_EMPTY) {
-////            element_type = "empty";
-////        } else if (element->GetType() == PDE_TYPE_BYTES) {
-////            size_t byte_count = element->GetBytesCount();
-////            char *bytes = new char[byte_count];
-////            element->GetBytes(byte_count, (void *)(bytes));
-////            element_data = std::string(bytes);
-////            element_type = "string";
-////        } else if (element->GetType() == PDE_TYPE_FILE) {
-////            element_data = element->GetFile().ToString();
-////            element_type = "file";
-////        }
-////        post.push_back(std::pair<std::string, std::string>(element_type, element_data));
-////        ++post_elem_iter;
-////    }
-
-//    return false;
-//}
+void RequestHandler::RegisterRoute(Route *route) {
+    std::cout << "Pushing Route Handler" << std::endl;
+    routes.push_back(route);
+}
