@@ -7,3 +7,4 @@ CMakeLists.txt.user
 build
 *.kdev4
 .kdev4
+docs
