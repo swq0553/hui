@@ -105,7 +105,7 @@ Response *RESTRoute::Call(std::string url, std::string method,
         int index = url.find(match);
         if (index != -1) {
             int start_index = index + match.size() + 1;
-            if (start_index < url.size()) {
+            if (start_index < int(url.size())) {
                 id = url.substr(start_index);
             }
         }
@@ -156,7 +156,7 @@ Response *JSONRESTRoute::Call(std::string url, std::string method,
         int index = url.find(match);
         if (index != -1) {
             int start_index = index + match.size() + 1;
-            if (start_index < url.size()) {
+            if (start_index < int(url.size())) {
                 id = url.substr(start_index);
             }
         }
@@ -203,6 +203,7 @@ CefRefPtr<CefResourceHandler> RequestHandler::GetResourceHandler(CefRefPtr<CefBr
     CefRequest::HeaderMap in_headers;
     request->GetHeaderMap(in_headers);
     std::multimap<CefString, CefString>::iterator header_iter = in_headers.begin();
+    std::string url = request->GetURL().ToString();
     std::string method = request->GetMethod().ToString();
     while (header_iter != in_headers.end()) {
         std::pair<CefString, CefString> header = (*header_iter);
@@ -214,7 +215,6 @@ CefRefPtr<CefResourceHandler> RequestHandler::GetResourceHandler(CefRefPtr<CefBr
         ++header_iter;
     }
 
-    std::string url = request->GetURL().ToString();
     int split_index = url.find_first_of('?');
     std::string base_url;
     std::string get_params;

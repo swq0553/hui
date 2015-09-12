@@ -87,7 +87,7 @@
             $("#json_result2").html(JSON.stringify(data));
           });
           $.ajax({
-            url: "http://huios.internal/basic_json",
+            url: "http://huios.internal/basic_json/1",
             type: "PUT",
             data: JSON.stringify({
               alpha: "beta"
@@ -97,7 +97,7 @@
             $("#json_result3").html(JSON.stringify(data));
           });
           $.ajax({
-            url: "http://huios.internal/basic_json",
+            url: "http://huios.internal/basic_json/1",
             type: "DELETE",
             dataType: "json"
           }).done(function(data) {

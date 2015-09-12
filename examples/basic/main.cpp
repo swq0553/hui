@@ -87,7 +87,10 @@ public:
     }
 
     Response *Put(std::string id, std::string data) {
-        return new Response("application/json", "{\"id\": \"" + id + "\"}");
+        if (data == "") {
+            return new Response("application/json", "{\"id\": \"" + id + "\"}");
+        }
+        return new Response("application/json", data);//"{\"id\": \"" + id + "\"}");
     }
 
     Response *Delete(std::string id) {
