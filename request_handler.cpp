@@ -94,6 +94,10 @@ Response *RESTRoute::Delete(std::string id) {
     return nullptr;
 }
 
+Response *RESTRoute::Options(void) {
+    return new Response("text/html", "ok");
+}
+
 Response *RESTRoute::Call(std::string url, std::string method,
                           std::vector<std::pair<std::string, std::string> > get,
                           std::vector<std::pair<std::string, std::string> > post) {
@@ -119,6 +123,8 @@ Response *RESTRoute::Call(std::string url, std::string method,
         return Put(id, post);
     } else if (method == "DELETE") {
         return Delete(id);
+    } else if (method == "OPTIONS") {
+        return Options();
     }
     return nullptr;
 }
@@ -143,6 +149,10 @@ Response *JSONRESTRoute::Post(std::string data) {
 
 Response *JSONRESTRoute::Delete(std::string id) {
     return nullptr;
+}
+
+Response *JSONRESTRoute::Options(void) {
+    return new Response("application/json", "{\"status\": \"ok\"");
 }
 
 Response *JSONRESTRoute::Call(std::string url, std::string method,
@@ -180,6 +190,8 @@ Response *JSONRESTRoute::Call(std::string url, std::string method,
         return Put(id, post_json);
     } else if (method == "DELETE") {
         return Delete(id);
+    } else if (method == "OPTIONS") {
+        return Options();
     }
     return nullptr;
 }
@@ -200,20 +212,8 @@ std::string ReadPostElementBytes(CefRefPtr<CefPostDataElement> element) {
 CefRefPtr<CefResourceHandler> RequestHandler::GetResourceHandler(CefRefPtr<CefBrowser> browser,
                                                                  CefRefPtr<CefFrame> frame,
                                                                  CefRefPtr<CefRequest> request) {
-    CefRequest::HeaderMap in_headers;
-    request->GetHeaderMap(in_headers);
-    std::multimap<CefString, CefString>::iterator header_iter = in_headers.begin();
     std::string url = request->GetURL().ToString();
     std::string method = request->GetMethod().ToString();
-    while (header_iter != in_headers.end()) {
-        std::pair<CefString, CefString> header = (*header_iter);
-        std::string first = header.first.ToString();
-        std::string second = header.second.ToString();
-        if (first == "Access-Control-Request-Method" && method == "OPTIONS") {
-            method = second;
-        }
-        ++header_iter;
-    }
 
     int split_index = url.find_first_of('?');
     std::string base_url;

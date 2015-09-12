@@ -50,6 +50,7 @@ class RESTRoute : public Route {
         virtual Response *Put(std::string id, std::vector<std::pair<std::string, std::string> > post);
         virtual Response *Post(std::vector<std::pair<std::string, std::string> > post);
         virtual Response *Delete(std::string id);
+        virtual Response *Options(void);
     protected:
         virtual Response *Call(std::string url, std::string method,
                                std::vector<std::pair<std::string, std::string> > get,
@@ -57,17 +58,18 @@ class RESTRoute : public Route {
 };
 
 class JSONRESTRoute : public Route {
-public:
-    JSONRESTRoute(std::regex _route);
+    public:
+        JSONRESTRoute(std::regex _route);
 
-    virtual Response *Get(std::string id = "");
-    virtual Response *Put(std::string id, std::string data);
-    virtual Response *Post(std::string data);
-    virtual Response *Delete(std::string id);
-private:
-    virtual Response *Call(std::string url, std::string method,
-                           std::vector<std::pair<std::string, std::string> > get,
-                           std::vector<std::pair<std::string, std::string> > post);
+        virtual Response *Get(std::string id = "");
+        virtual Response *Put(std::string id, std::string data);
+        virtual Response *Post(std::string data);
+        virtual Response *Delete(std::string id);
+        virtual Response *Options(void);
+    private:
+        virtual Response *Call(std::string url, std::string method,
+                               std::vector<std::pair<std::string, std::string> > get,
+                               std::vector<std::pair<std::string, std::string> > post);
 };
 
 std::string ReadPostElementBytes(CefRefPtr<CefPostDataElement> element);
