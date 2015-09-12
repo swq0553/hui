@@ -110,7 +110,6 @@ Response *RESTRoute::Call(std::string url, std::string method,
             }
         }
     }
-    std::cout << "Method: " << method << std::endl;
 
     if (method == "GET") {
         return Get(id);
@@ -204,8 +203,6 @@ CefRefPtr<CefResourceHandler> RequestHandler::GetResourceHandler(CefRefPtr<CefBr
     CefRequest::HeaderMap in_headers;
     request->GetHeaderMap(in_headers);
     std::multimap<CefString, CefString>::iterator header_iter = in_headers.begin();
-    std::cout << "URL: " << request->GetURL().ToString() << std::endl;
-    std::cout << "Method: " << request->GetMethod().ToString() << std::endl;
     std::string method = request->GetMethod().ToString();
     while (header_iter != in_headers.end()) {
         std::pair<CefString, CefString> header = (*header_iter);
@@ -214,10 +211,8 @@ CefRefPtr<CefResourceHandler> RequestHandler::GetResourceHandler(CefRefPtr<CefBr
         if (first == "Access-Control-Request-Method" && method == "OPTIONS") {
             method = second;
         }
-        std::cout << first << ": " << second << std::endl;
         ++header_iter;
     }
-    std::cout << "New Method: " << method << std::endl;
 
     std::string url = request->GetURL().ToString();
     int split_index = url.find_first_of('?');
