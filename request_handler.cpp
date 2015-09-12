@@ -110,6 +110,7 @@ Response *RESTRoute::Call(std::string url, std::string method,
             }
         }
     }
+    std::cout << "Method: " << method << std::endl;
 
     if (method == "GET") {
         return Get(id);
@@ -148,6 +149,39 @@ Response *JSONRESTRoute::Delete(std::string id) {
 Response *JSONRESTRoute::Call(std::string url, std::string method,
                               std::vector<std::pair<std::string, std::string> > get,
                               std::vector<std::pair<std::string, std::string> > post) {
+    std::smatch matches;
+    bool result = std::regex_search(url, matches, route);
+    std::string id = "";
+    if (result) {
+        std::string match = matches[0];
+        int index = url.find(match);
+        if (index != -1) {
+            int start_index = index + match.size() + 1;
+            if (start_index < url.size()) {
+                id = url.substr(start_index);
+            }
+        }
+    }
+
+    std::string post_json = "";
+    if (method == "POST" || method == "PUT") {
+        std::vector<std::pair<std::string, std::string> >::iterator post_iter = post.begin();
+        while (post_iter != post.end()) {
+            std::pair<std::string, std::string> p = (*post_iter);
+            post_json = p.second;
+            break;
+        }
+    }
+
+    if (method == "GET") {
+        return Get(id);
+    } else if (method == "POST") {
+        return Post(post_json);
+    } else if (method == "PUT") {
+        return Put(id, post_json);
+    } else if (method == "DELETE") {
+        return Delete(id);
+    }
     return nullptr;
 }
 
@@ -156,10 +190,35 @@ RequestHandler::RequestHandler(void) {
     routes.clear();
 }
 
+std::string ReadPostElementBytes(CefRefPtr<CefPostDataElement> element) {
+    size_t byte_count = element->GetBytesCount();
+    char *bytes = new char[byte_count + 1];
+    element->GetBytes(byte_count + 1, (void *)(bytes));
+    bytes[byte_count] = '\0';
+    return std::string(bytes);
+}
+
 CefRefPtr<CefResourceHandler> RequestHandler::GetResourceHandler(CefRefPtr<CefBrowser> browser,
                                                                  CefRefPtr<CefFrame> frame,
                                                                  CefRefPtr<CefRequest> request) {
-    // Evaluate if match, if so, return new ResourceHandler();
+    CefRequest::HeaderMap in_headers;
+    request->GetHeaderMap(in_headers);
+    std::multimap<CefString, CefString>::iterator header_iter = in_headers.begin();
+    std::cout << "URL: " << request->GetURL().ToString() << std::endl;
+    std::cout << "Method: " << request->GetMethod().ToString() << std::endl;
+    std::string method = request->GetMethod().ToString();
+    while (header_iter != in_headers.end()) {
+        std::pair<CefString, CefString> header = (*header_iter);
+        std::string first = header.first.ToString();
+        std::string second = header.second.ToString();
+        if (first == "Access-Control-Request-Method" && method == "OPTIONS") {
+            method = second;
+        }
+        std::cout << first << ": " << second << std::endl;
+        ++header_iter;
+    }
+    std::cout << "New Method: " << method << std::endl;
+
     std::string url = request->GetURL().ToString();
     int split_index = url.find_first_of('?');
     std::string base_url;
@@ -184,8 +243,6 @@ CefRefPtr<CefResourceHandler> RequestHandler::GetResourceHandler(CefRefPtr<CefBr
     }
 
     if (found) {
-        std::string method = request->GetMethod().ToString();
-
         std::vector<std::pair<std::string, std::string> > get;
         std::vector<std::string> get_param_chunks = split(get_params, '&');
         std::vector<std::string>::iterator get_param_chunk_iter = get_param_chunks.begin();
@@ -210,10 +267,7 @@ CefRefPtr<CefResourceHandler> RequestHandler::GetResourceHandler(CefRefPtr<CefBr
                 if (element->GetType() == PDE_TYPE_EMPTY) {
                     element_type = "empty";
                 } else if (element->GetType() == PDE_TYPE_BYTES) {
-                    size_t byte_count = element->GetBytesCount();
-                    char *bytes = new char[byte_count];
-                    element->GetBytes(byte_count, (void *)(bytes));
-                    element_data = std::string(bytes);
+                    element_data = ReadPostElementBytes(element);
                     element_type = "string";
                 } else if (element->GetType() == PDE_TYPE_FILE) {
                     element_data = element->GetFile().ToString();
@@ -228,11 +282,17 @@ CefRefPtr<CefResourceHandler> RequestHandler::GetResourceHandler(CefRefPtr<CefBr
         if (result == nullptr) {
             return nullptr;
         }
+
+        std::string content_str = result->GetContent();
+        int content_size = content_str.size();
+        const char *content = content_str.c_str();
+
         CefRefPtr<CefStreamReader> result_stream = CefStreamReader::CreateForData(
-            static_cast<void*>(const_cast<char*>(result->GetContent().c_str())),
-            result->GetContent().size());
+            static_cast<void*>(const_cast<char*>(content)), content_size);
         CefResponse::HeaderMap headers;
         headers.insert(std::pair<CefString, CefString>("Access-Control-Allow-Origin", "*"));
+        headers.insert(std::pair<CefString, CefString>("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, PATCH, DELETE"));
+
         return new CefStreamResourceHandler(200, "200 OK", result->GetMimeType(), headers, result_stream);
     }
 

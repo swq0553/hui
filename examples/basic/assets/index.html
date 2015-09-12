@@ -1,0 +1,110 @@
+<html>
+  <head>
+    <title>Weeee</title>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <style>
+      body {
+        /*background-color: transparent;*/
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        font-family: sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Tester</h2>
+    <div><button id="go">GO</button></div>
+
+    <h3>Route</h3>
+    <div id="route_result"></div>
+
+    <h3>REST Route</h3>
+    <div id="rest_result0"></div>
+    <div id="rest_result1"></div>
+    <div id="rest_result2"></div>
+    <div id="rest_result3"></div>
+    <div id="rest_result4"></div>
+
+    <h3>JSON REST Route</h3>
+    <div id="json_result0"></div>
+    <div id="json_result1"></div>
+    <div id="json_result2"></div>
+    <div id="json_result3"></div>
+    <div id="json_result4"></div>
+    <script>
+      $(document).ready(function() {
+        $("#go").on("click", function() {
+          $.get("http://huios.internal/basic_html", function(response) {
+            $("#route_result").html(response);
+          });
+
+          $.get("http://huios.internal/basic_rest", function(response) {
+            $("#rest_result0").html(response);
+          });
+          $.get("http://huios.internal/basic_rest/1", function(response) {
+            $("#rest_result1").html(response);
+          });
+          $.post("http://huios.internal/basic_rest", {alpha: "beta"}, function(data) {
+            $("#rest_result2").html(data);
+          });
+          $.ajax({
+            url: "http://huios.internal/basic_rest/1",
+            data: {alpha: "beta"},
+            type: "PUT",
+          }).done(function(data) {
+            $("#rest_result3").html(data);
+          });
+          $.ajax({
+            url: "http://huios.internal/basic_rest/1",
+            type: "DELETE",
+          }).done(function(data) {
+            $("#rest_result4").html(data);
+          });
+
+          $.ajax({
+            url: "http://huios.internal/basic_json",
+            type: "GET",
+            dataType: "json"
+          }).done(function(data) {
+            $("#json_result0").html(JSON.stringify(data));
+          });
+          $.ajax({
+            url: "http://huios.internal/basic_json/1",
+            type: "GET",
+            dataType: "json"
+          }).done(function(data) {
+            $("#json_result1").html(JSON.stringify(data));
+          });
+          $.ajax({
+            url: "http://huios.internal/basic_json",
+            type: "POST",
+            data: JSON.stringify({
+              alpha: "beta"
+            }),
+            dataType: "json"
+          }).done(function(data) {
+            $("#json_result2").html(JSON.stringify(data));
+          });
+          $.ajax({
+            url: "http://huios.internal/basic_json",
+            type: "PUT",
+            data: JSON.stringify({
+              alpha: "beta"
+            }),
+            dataType: "json"
+          }).done(function(data) {
+            $("#json_result3").html(JSON.stringify(data));
+          });
+          $.ajax({
+            url: "http://huios.internal/basic_json",
+            type: "DELETE",
+            dataType: "json"
+          }).done(function(data) {
+            $("#json_result4").html(JSON.stringify(data));
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

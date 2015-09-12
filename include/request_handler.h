@@ -70,6 +70,8 @@ private:
                            std::vector<std::pair<std::string, std::string> > post);
 };
 
+std::string ReadPostElementBytes(CefRefPtr<CefPostDataElement> element);
+
 class RequestHandler : public CefRequestHandler {
     public:
         RequestHandler(void);

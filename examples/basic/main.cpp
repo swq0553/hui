@@ -33,8 +33,6 @@ public:
     Response *HandleRequest(std::string url, std::string method,
                             std::vector<std::pair<std::string, std::string> > get,
                             std::vector<std::pair<std::string, std::string> > post) {
-        std::cout << "URL: " << url << std::endl;
-        std::cout << "Method: " << method << std::endl;
         return new Response("text/html", "Made it");
     }
 };
@@ -46,8 +44,54 @@ public:
     }
 
     Response *Get(std::string id) {
-        std::cout << "ID: " << id << std::endl;
-        return new Response("text/html", "Weeeeeeee");
+        return new Response("text/html", "Weeeeeeee " + id);
+    }
+
+    Response *Post(std::vector<std::pair<std::string, std::string> > post) {
+        std::vector<std::pair<std::string, std::string> >::iterator post_iter = post.begin();
+        while (post_iter != post.end()) {
+            std::pair<std::string, std::string> p = (*post_iter);
+            return new Response("text/html", p.second + " was posted");
+            ++post_iter;
+        }
+        return new Response("text/html", "ERROR");
+    }
+
+    Response *Put(std::string id, std::vector<std::pair<std::string, std::string> > post) {
+        std::vector<std::pair<std::string, std::string> >::iterator post_iter = post.begin();
+        while (post_iter != post.end()) {
+            std::pair<std::string, std::string> p = (*post_iter);
+            return new Response("text/html", p.second + " was putted with id " + id);
+            ++post_iter;
+        }
+        return new Response("text/html", "ERROR");
+    }
+
+    Response *Delete(std::string id) {
+        return new Response("text/html", "Deleted ID " + id);
+    }
+};
+
+class MyJSONRESTRoute : public JSONRESTRoute {
+public:
+    MyJSONRESTRoute(void) : JSONRESTRoute(std::regex("basic_json")) {
+        //
+    }
+
+    Response *Get(std::string id) {
+        return new Response("application/json", "{\"id\": \"" + id + "\"}");
+    }
+
+    Response *Post(std::string post_json) {
+        return new Response("application/json", post_json);
+    }
+
+    Response *Put(std::string id, std::string data) {
+        return new Response("application/json", "{\"id\": \"" + id + "\"}");
+    }
+
+    Response *Delete(std::string id) {
+        return new Response("application/json", "{\"id\": \"" + id + "\"}");
     }
 };
 
@@ -123,6 +167,7 @@ int main(int argc, char **argv) {
     HUIOS *huios = new HUIOS(window.getSystemHandle(), render_handler);
     huios->RegisterRoute(new MyRoute());
     huios->RegisterRoute(new MyRESTRoute());
+    huios->RegisterRoute(new MyJSONRESTRoute());
     huios->Reshape(1280, 720);
     huios->Load("file:///home/douglas/Projects/huios/examples/basic/assets/index.html");
 
@@ -201,12 +246,10 @@ int main(int argc, char **argv) {
     vertexshader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexshader, 1, (const GLchar**)&vertexsource, 0);
     glCompileShader(vertexshader);
-    std::cout << "Frag Log: " << ShaderShaderLog(vertexshader) << std::endl;
 
     fragmentshader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentshader, 1, (const GLchar**)&fragmentsource, 0);
     glCompileShader(fragmentshader);
-    std::cout << "Frag Log: " << ShaderShaderLog(fragmentshader) << std::endl;
 
     shaderprogram = glCreateProgram();
     glAttachShader(shaderprogram, vertexshader);
