@@ -312,9 +312,6 @@ int main(int argc, char **argv) {
 //            }
 
             if (event.type == sf::Event::TextEntered) {
-                std::cout << "Unicode: " << event.text.unicode << std::endl;
-//                huios->KeyPress(event.text.unicode);
-//                huios->KeyRelease(event.text.unicode);
                 huios->KeyChar(event.text.unicode);
             }
        }
