@@ -5,7 +5,7 @@
 
 int HUIOS::Init(int argc, char **argv) {
     CefMainArgs args(argc, argv);
-    CefRefPtr<App> app(new App);
+    CefRefPtr<App> app(new App(new RenderProcessHandler()));
     int exit_code = CefExecuteProcess(args, app.get(), NULL);
     if (exit_code >= 0) {
         return exit_code;

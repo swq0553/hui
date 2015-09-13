@@ -15,4 +15,4 @@ sudo cp libffmpegsumo.so /lib/x86_64-linux-gnu/
 TODO:
 - [x] Custom Routed Requset Handlers (Route, RESTRoute, JSONRESTRoute)
 - [ ] Websocket Interface
-- [ ] Injected Javascript Objects
+- [ ] Injected Javascript Objects - https://bitbucket.org/chromiumembedded/cef/wiki/JavaScriptIntegration

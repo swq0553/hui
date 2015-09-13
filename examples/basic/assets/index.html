@@ -32,6 +32,12 @@
     <div id="json_result2"></div>
     <div id="json_result3"></div>
     <div id="json_result4"></div>
+
+    <h3>Injected JS Values</h3>
+    <div id="injected_result0"></div>
+    <div id="injected_result1"></div>
+    <div id="injected_result2"></div>
+
     <script>
       $(document).ready(function() {
         $("#go").on("click", function() {
@@ -103,6 +109,10 @@
           }).done(function(data) {
             $("#json_result4").html(JSON.stringify(data));
           });
+
+          $("#injected_result0").html(test_string);
+          $("#injected_result1").html(test_array[0] + ", " + test_array[1] + ", " + test_array[2]);
+          $("#injected_result2").html(test_obj.sub_value);
         });
       });
     </script>
