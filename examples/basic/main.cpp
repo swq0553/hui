@@ -250,7 +250,7 @@ int main(int argc, char **argv) {
     glEnableVertexAttribArray(1);
 
     /* Read our shaders into the appropriate buffers */
-    vertexsource = "#version 130\n"
+    vertexsource = (GLchar *)"#version 130\n"
             "uniform mat4 projection_matrix;"
             "uniform mat4 view_matrix;"
             "uniform mat4 model_matrix;"
@@ -263,7 +263,7 @@ int main(int argc, char **argv) {
             "    gl_Position = vertex;"
             "    texcoord = vertex_texcoord.st;"
             "}";
-    fragmentsource = "#version 130\n"
+    fragmentsource = (GLchar *)"#version 130\n"
             "smooth in vec2 texcoord;"
             "smooth in vec4 vertex;"
             "uniform sampler2D gui_texture;"
