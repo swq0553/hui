@@ -37,7 +37,8 @@ CefRefPtr<CefV8Value> ConvertJSValueToCef(JSValue *in) {
         }
         return cval;
     } else if (in->Type() == JSValue::JS_FUNCTION) {
-        //
+        JSFunction *func = static_cast<JSFunction *>(in);
+        return CefV8Value::CreateFunction(func->Name(), func);
     }
     return CefV8Value::CreateNull();
 }
@@ -300,7 +301,12 @@ bool JSFunction::Execute(const CefString &name, CefRefPtr<CefV8Value> object,
     for (int i = 0; i < arguments.size(); i++) {
         parameters.push_back(ConvertCefToJSValue(arguments[i]));
     }
-    JSValue return_value;
+    JSValue *return_value;
+    std::string return_exception;
+    Call(converted_name, static_cast<JSObjectValue *>(this_obj),
+         parameters, return_value, return_exception);
+    retval = ConvertJSValueToCef(return_value);
+    exception = CefString(return_exception);
 
     return true;
 }
