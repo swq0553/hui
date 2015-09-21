@@ -6,86 +6,90 @@
 #include "cef_client.h"
 #include "cef_request_handler.h"
 
-class RequestHandler;
+namespace HUI {
 
-class Response {
-    public:
-        Response(void);
-        Response(std::string _mime_type, std::string _content);
+    class RequestHandler;
 
-        std::string GetMimeType(void);
-        std::string GetContent(void);
+    class Response {
+        public:
+            Response(void);
+            Response(std::string _mime_type, std::string _content);
 
-        void SetMimeType(std::string _mime_type);
-        void SetContent(std::string _content);
-    private:
-        std::string mime_type;
-        std::string content;
-};
+            std::string GetMimeType(void);
+            std::string GetContent(void);
 
-class Route  {
-    friend class RequestHandler;
+            void SetMimeType(std::string _mime_type);
+            void SetContent(std::string _content);
+        private:
+            std::string mime_type;
+            std::string content;
+    };
 
-    public:
-        Route(std::regex _route);
+    class Route  {
+            friend class RequestHandler;
 
-        std::regex RouteRegex(void);
-        virtual Response *HandleRequest(std::string url, std::string method,
-                                std::vector<std::pair<std::string, std::string> > get,
-                                std::vector<std::pair<std::string, std::string> > post);
+        public:
+            Route(std::regex _route);
 
-    protected:
-        virtual Response *Call(std::string url, std::string method,
-                               std::vector<std::pair<std::string, std::string> > get,
-                               std::vector<std::pair<std::string, std::string> > post);
+            std::regex RouteRegex(void);
+            virtual Response *HandleRequest(std::string url, std::string method,
+                                            std::vector<std::pair<std::string, std::string> > get,
+                                            std::vector<std::pair<std::string, std::string> > post);
 
-        std::regex route;
-};
+        protected:
+            virtual Response *Call(std::string url, std::string method,
+                                   std::vector<std::pair<std::string, std::string> > get,
+                                   std::vector<std::pair<std::string, std::string> > post);
 
-class RESTRoute : public Route {
-    public:
-        RESTRoute(std::regex _route);
+            std::regex route;
+    };
 
-        virtual Response *Get(std::string id = "");
-        virtual Response *Put(std::string id, std::vector<std::pair<std::string, std::string> > post);
-        virtual Response *Post(std::vector<std::pair<std::string, std::string> > post);
-        virtual Response *Delete(std::string id);
-        virtual Response *Options(void);
-    protected:
-        virtual Response *Call(std::string url, std::string method,
-                               std::vector<std::pair<std::string, std::string> > get,
-                               std::vector<std::pair<std::string, std::string> > post);
-};
+    class RESTRoute : public Route {
+        public:
+            RESTRoute(std::regex _route);
 
-class JSONRESTRoute : public Route {
-    public:
-        JSONRESTRoute(std::regex _route);
+            virtual Response *Get(std::string id = "");
+            virtual Response *Put(std::string id, std::vector<std::pair<std::string, std::string> > post);
+            virtual Response *Post(std::vector<std::pair<std::string, std::string> > post);
+            virtual Response *Delete(std::string id);
+            virtual Response *Options(void);
+        protected:
+            virtual Response *Call(std::string url, std::string method,
+                                   std::vector<std::pair<std::string, std::string> > get,
+                                   std::vector<std::pair<std::string, std::string> > post);
+    };
 
-        virtual Response *Get(std::string id = "");
-        virtual Response *Put(std::string id, std::string data);
-        virtual Response *Post(std::string data);
-        virtual Response *Delete(std::string id);
-        virtual Response *Options(void);
-    private:
-        virtual Response *Call(std::string url, std::string method,
-                               std::vector<std::pair<std::string, std::string> > get,
-                               std::vector<std::pair<std::string, std::string> > post);
-};
+    class JSONRESTRoute : public Route {
+        public:
+            JSONRESTRoute(std::regex _route);
 
-std::string ReadPostElementBytes(CefRefPtr<CefPostDataElement> element);
+            virtual Response *Get(std::string id = "");
+            virtual Response *Put(std::string id, std::string data);
+            virtual Response *Post(std::string data);
+            virtual Response *Delete(std::string id);
+            virtual Response *Options(void);
+        private:
+            virtual Response *Call(std::string url, std::string method,
+                                   std::vector<std::pair<std::string, std::string> > get,
+                                   std::vector<std::pair<std::string, std::string> > post);
+    };
 
-class RequestHandler : public CefRequestHandler {
-    public:
-        RequestHandler(void);
+    std::string ReadPostElementBytes(CefRefPtr<CefPostDataElement> element);
 
-        CefRefPtr<CefResourceHandler> GetResourceHandler(CefRefPtr<CefBrowser> browser,
-                                                         CefRefPtr<CefFrame> frame,
-                                                         CefRefPtr<CefRequest> request);
-        void RegisterRoute(Route *route);
-    private:
-        std::vector<Route *> routes;
+    class RequestHandler : public CefRequestHandler {
+        public:
+            RequestHandler(void);
 
-    IMPLEMENT_REFCOUNTING(RequestHandler);
-};
+            CefRefPtr<CefResourceHandler> GetResourceHandler(CefRefPtr<CefBrowser> browser,
+                                                             CefRefPtr<CefFrame> frame,
+                                                             CefRefPtr<CefRequest> request);
+            void RegisterRoute(Route *route);
+        private:
+            std::vector<Route *> routes;
+
+            IMPLEMENT_REFCOUNTING(RequestHandler);
+    };
+
+}
 
 #endif

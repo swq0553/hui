@@ -39,6 +39,9 @@
     <div id="injected_result2"></div>
     <div id="injected_result3"></div>
 
+    <h3>WebSocket Communication</h3>
+    <div id="websocket_result">TODO!</div>
+
     <script>
       $(document).ready(function() {
         $("#go").on("click", function() {
@@ -114,7 +117,7 @@
           $("#injected_result0").html(test_string);
           $("#injected_result1").html(test_array[0] + ", " + test_array[1] + ", " + test_array[2]);
           $("#injected_result2").html(test_obj.sub_value);
-          $("#injected_result3").html("Return Value: " + test_obj.test_function());
+          $("#injected_result3").html("Return Value: " + test_obj.test_function("test"));
         });
       });
     </script>

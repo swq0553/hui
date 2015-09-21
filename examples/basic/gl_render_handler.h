@@ -10,7 +10,7 @@
 
 #include "include/render_handler.h"
 
-class GLRenderHandler : public RenderHandler {
+class GLRenderHandler : public HUI::RenderHandler {
 public:
     GLRenderHandler(void);
     ~GLRenderHandler(void);

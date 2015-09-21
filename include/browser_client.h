@@ -6,18 +6,22 @@
 #include "render_handler.h"
 #include "request_handler.h"
 
-class BrowserClient : public CefClient {
-    public:
-      BrowserClient(RenderHandler *_render_handler);
+namespace HUI {
 
-      virtual CefRefPtr<CefRenderHandler> GetRenderHandler(void);
-      virtual CefRefPtr<CefRequestHandler> GetRequestHandler(void);
+    class BrowserClient : public CefClient {
+        public:
+            BrowserClient(RenderHandler *_render_handler);
 
-    private:
-      CefRefPtr<CefRenderHandler> render_handler;
-      CefRefPtr<CefRequestHandler> request_handler;
+            virtual CefRefPtr<CefRenderHandler> GetRenderHandler(void);
+            virtual CefRefPtr<CefRequestHandler> GetRequestHandler(void);
 
-      IMPLEMENT_REFCOUNTING(BrowserClient);
-};
+        private:
+            CefRefPtr<CefRenderHandler> render_handler;
+            CefRefPtr<CefRequestHandler> request_handler;
+
+            IMPLEMENT_REFCOUNTING(BrowserClient);
+    };
+
+}
 
 #endif

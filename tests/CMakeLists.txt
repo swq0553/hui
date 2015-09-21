@@ -1,0 +1,5 @@
+project(huios)
+include_directories(/usr/local/ /usr/local/include/ ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+add_executable(hui_tests main.cpp)
+add_dependencies(hui_tests cef_dll_wrapper)
+target_link_libraries(hui_tests hui ${EXTLIBS})

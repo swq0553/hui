@@ -4,17 +4,21 @@
 #include "cef_app.h"
 #include "render_process_handler.h"
 
-class App : public CefApp {
-    public:
-        App(RenderProcessHandler *_render_process_handler);
+namespace HUI {
 
-        void OnRegisterCustomSchemes(CefRefPtr<CefSchemeRegistrar> registrar);
-        CefRefPtr<CefRenderProcessHandler> GetRenderProcessHandler(void);
+    class App : public CefApp {
+        public:
+            App(RenderProcessHandler *_render_process_handler);
 
-    private:
-        CefRefPtr<CefRenderProcessHandler> render_process_handler;
+            void OnRegisterCustomSchemes(CefRefPtr<CefSchemeRegistrar> registrar);
+            CefRefPtr<CefRenderProcessHandler> GetRenderProcessHandler(void);
 
-        IMPLEMENT_REFCOUNTING(App);
-};
+        private:
+            CefRefPtr<CefRenderProcessHandler> render_process_handler;
+
+            IMPLEMENT_REFCOUNTING(App);
+    };
+
+}
 
 #endif

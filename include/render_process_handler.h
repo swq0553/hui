@@ -6,18 +6,22 @@
 
 #include "cef_render_process_handler.h"
 
-typedef std::unordered_map<std::string, JSValue *> RenderProcessHandlerValues;
+namespace HUI {
 
-class RenderProcessHandler : public CefRenderProcessHandler {
-    public:
-        RenderProcessHandler(RenderProcessHandlerValues _values);
-        void OnContextCreated(CefRefPtr<CefBrowser> browser,
-                              CefRefPtr<CefFrame> frame,
-                              CefRefPtr<CefV8Context> context);
-    private:
-        RenderProcessHandlerValues values;
+    typedef std::unordered_map<std::string, JSValue *> RenderProcessHandlerValues;
 
-        IMPLEMENT_REFCOUNTING(RenderProcessHandler);
-};
+    class RenderProcessHandler : public CefRenderProcessHandler {
+        public:
+            RenderProcessHandler(RenderProcessHandlerValues _values);
+            void OnContextCreated(CefRefPtr<CefBrowser> browser,
+                                  CefRefPtr<CefFrame> frame,
+                                  CefRefPtr<CefV8Context> context);
+        private:
+            RenderProcessHandlerValues values;
+
+            IMPLEMENT_REFCOUNTING(RenderProcessHandler);
+    };
+
+}
 
 #endif

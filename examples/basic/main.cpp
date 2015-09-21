@@ -18,80 +18,80 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
 
-#include "include/huios.h"
+#include "include/hui.h"
 
 #include "gl_render_handler.h"
 
 
-class MyRoute : public Route {
+class MyRoute : public HUI::Route {
 public:
-    MyRoute(void) : Route(std::regex("basic_html")) {
+    MyRoute(void) : HUI::Route(std::regex("basic_html")) {
         //
     }
 
 
-    Response *HandleRequest(std::string url, std::string method,
+    HUI::Response *HandleRequest(std::string url, std::string method,
                             std::vector<std::pair<std::string, std::string> > get,
                             std::vector<std::pair<std::string, std::string> > post) {
-        return new Response("text/html", "Made it");
+        return new HUI::Response("text/html", "Made it");
     }
 };
 
-class MyRESTRoute : public RESTRoute {
+class MyRESTRoute : public HUI::RESTRoute {
 public:
-    MyRESTRoute(void) : RESTRoute(std::regex("basic_rest")) {
+    MyRESTRoute(void) : HUI::RESTRoute(std::regex("basic_rest")) {
         //
     }
 
-    Response *Get(std::string id) {
-        return new Response("text/html", "Weeeeeeee " + id);
+    HUI::Response *Get(std::string id) {
+        return new HUI::Response("text/html", "Weeeeeeee " + id);
     }
 
-    Response *Post(std::vector<std::pair<std::string, std::string> > post) {
+    HUI::Response *Post(std::vector<std::pair<std::string, std::string> > post) {
         std::vector<std::pair<std::string, std::string> >::iterator post_iter = post.begin();
         while (post_iter != post.end()) {
             std::pair<std::string, std::string> p = (*post_iter);
-            return new Response("text/html", p.second + " was posted");
+            return new HUI::Response("text/html", p.second + " was posted");
             ++post_iter;
         }
-        return new Response("text/html", "ERROR");
+        return new HUI::Response("text/html", "ERROR");
     }
 
-    Response *Put(std::string id, std::vector<std::pair<std::string, std::string> > post) {
+    HUI::Response *Put(std::string id, std::vector<std::pair<std::string, std::string> > post) {
         std::vector<std::pair<std::string, std::string> >::iterator post_iter = post.begin();
         while (post_iter != post.end()) {
             std::pair<std::string, std::string> p = (*post_iter);
-            return new Response("text/html", p.second + " was putted with id " + id);
+            return new HUI::Response("text/html", p.second + " was putted with id " + id);
             ++post_iter;
         }
-        return new Response("text/html", "ERROR");
+        return new HUI::Response("text/html", "ERROR");
     }
 
-    Response *Delete(std::string id) {
-        return new Response("text/html", "Deleted ID " + id);
+    HUI::Response *Delete(std::string id) {
+        return new HUI::Response("text/html", "Deleted ID " + id);
     }
 };
 
-class MyJSONRESTRoute : public JSONRESTRoute {
+class MyJSONRESTRoute : public HUI::JSONRESTRoute {
 public:
-    MyJSONRESTRoute(void) : JSONRESTRoute(std::regex("basic_json")) {
+    MyJSONRESTRoute(void) : HUI::JSONRESTRoute(std::regex("basic_json")) {
         //
     }
 
-    Response *Get(std::string id) {
-        return new Response("application/json", "{\"id\": \"" + id + "\"}");
+    HUI::Response *Get(std::string id) {
+        return new HUI::Response("application/json", "{\"id\": \"" + id + "\"}");
     }
 
-    Response *Post(std::string post_json) {
-        return new Response("application/json", post_json);
+    HUI::Response *Post(std::string post_json) {
+        return new HUI::Response("application/json", post_json);
     }
 
-    Response *Put(std::string id, std::string data) {
-        return new Response("application/json", data);//"{\"id\": \"" + id + "\"}");
+    HUI::Response *Put(std::string id, std::string data) {
+        return new HUI::Response("application/json", data);//"{\"id\": \"" + id + "\"}");
     }
 
-    Response *Delete(std::string id) {
-        return new Response("application/json", "{\"id\": \"" + id + "\"}");
+    HUI::Response *Delete(std::string id) {
+        return new HUI::Response("application/json", "{\"id\": \"" + id + "\"}");
     }
 };
 
@@ -147,38 +147,38 @@ std::string ShaderShaderLog(unsigned int shader_object_id){
     return out;
 }
 
-class MyJSFunction : public JSFunction {
+class MyJSFunction : public HUI::JSFunction {
     public:
-        MyJSFunction(void) : JSFunction("test_function") {
+        MyJSFunction(void) : HUI::JSFunction("test_function") {
             //
         }
 
-        JSValue *Call(std::string _name, JSObjectValue *obj_this,
-                      std::vector<JSValue *> parameters, std::string exception) {
-            return new JSStringValue("Darf-snarf!");
+        HUI::JSValue *Call(std::string _name, HUI::JSObjectValue *obj_this,
+                      std::vector<HUI::JSValue *> parameters, std::string exception) {
+            return new HUI::JSStringValue("Darf-snarf!");
         }
 
     private:
 };
 
 int main(int argc, char **argv) {
-    RenderProcessHandlerValues values;
+    HUI::RenderProcessHandlerValues values;
 
-    JSStringValue *str = new JSStringValue("Test String");
+    HUI::JSStringValue *str = new HUI::JSStringValue("Test String");
     values["test_string"] = str;
 
-    JSArrayValue *arr = new JSArrayValue();
-    arr->Push(new JSStringValue("Array 0"));
-    arr->Push(new JSBoolValue(true));
-    arr->Push(new JSDoubleValue(1.42));
+    HUI::JSArrayValue *arr = new HUI::JSArrayValue();
+    arr->Push(new HUI::JSStringValue("Array 0"));
+    arr->Push(new HUI::JSBoolValue(true));
+    arr->Push(new HUI::JSDoubleValue(1.42));
     values["test_array"] = arr;
 
-    JSObjectValue *obj = new JSObjectValue();
-    obj->Set("sub_value", new JSStringValue("Weeeeeeeeeee Object Sub-Value"));
+    HUI::JSObjectValue *obj = new HUI::JSObjectValue();
+    obj->Set("sub_value", new HUI::JSStringValue("Weeeeeeeeeee Object Sub-Value"));
     obj->Set("test_function", new MyJSFunction());
     values["test_obj"] = obj;
 
-    int code = HUIOS::Init(argc, argv, values);
+    int code = HUI::HUI::Init(argc, argv, values);
     if (code >= 0) {
         return code;
     }
@@ -194,7 +194,7 @@ int main(int argc, char **argv) {
 
     // HUIOS Init
     GLRenderHandler *render_handler = new GLRenderHandler();
-    HUIOS *huios = new HUIOS(window.getSystemHandle(), render_handler);
+    HUI::HUI *huios = new HUI::HUI(window.getSystemHandle(), render_handler);
     huios->RegisterRoute(new MyRoute());
     huios->RegisterRoute(new MyRESTRoute());
     huios->RegisterRoute(new MyJSONRESTRoute());
@@ -326,11 +326,11 @@ int main(int argc, char **argv) {
             }
 
             if (event.type == sf::Event::MouseButtonPressed) {
-                huios->MouseButtonPress(HUIOS::MB_LEFT);
+                huios->MouseButtonPress(HUI::HUI::MB_LEFT);
             }
 
             if (event.type == sf::Event::MouseButtonReleased) {
-                huios->MouseButtonRelease(HUIOS::MB_LEFT);
+                huios->MouseButtonRelease(HUI::HUI::MB_LEFT);
             }
 
 //            if (event.type == sf::Event::KeyPressed) {
@@ -367,7 +367,7 @@ int main(int argc, char **argv) {
         window.display();
     }
 
-    HUIOS::Shutdown();
+    HUI::HUI::Shutdown();
 
     return EXIT_SUCCESS;
 }
