@@ -26,6 +26,7 @@ class JSValue {
         ~JSValue(void);
 
         JSValueType Type(void);
+        std::string TypeString(void);
     protected:
         JSValueType type;
 };
@@ -123,14 +124,15 @@ class JSFunction : public JSValue, public CefV8Handler {
 
         std::string Name(void);
         std::string SetName(std::string _name);
-        virtual void Call(std::string name, JSObjectValue *obj_this,
-                          std::vector<JSValue *> parameters, JSValue *return_value,
-                          std::string exception) = 0;
+        virtual JSValue *Call(std::string name, JSObjectValue *obj_this,
+                              std::vector<JSValue *> parameters, std::string exception);
         bool Execute(const CefString& name, CefRefPtr<CefV8Value> object,
                      const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval,
                      CefString& exception);
     private:
         std::string name;
+
+        IMPLEMENT_REFCOUNTING(JSFunction);
 };
 
 CefRefPtr<CefV8Value> ConvertJSValueToCef(JSValue *in);

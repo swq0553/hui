@@ -6,7 +6,7 @@
       body {
         /*background-color: transparent;*/
         color: white;
-        font-size: 20px;
+        font-size: 14px;
         font-weight: bold;
         font-family: sans-serif;
       }
@@ -37,6 +37,7 @@
     <div id="injected_result0"></div>
     <div id="injected_result1"></div>
     <div id="injected_result2"></div>
+    <div id="injected_result3"></div>
 
     <script>
       $(document).ready(function() {
@@ -113,6 +114,7 @@
           $("#injected_result0").html(test_string);
           $("#injected_result1").html(test_array[0] + ", " + test_array[1] + ", " + test_array[2]);
           $("#injected_result2").html(test_obj.sub_value);
+          $("#injected_result3").html("Return Value: " + test_obj.test_function());
         });
       });
     </script>

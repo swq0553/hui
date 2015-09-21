@@ -1,4 +1,5 @@
 #include "include/js_value.h"
+#include <iostream>
 
 
 CefRefPtr<CefV8Value> ConvertJSValueToCef(JSValue *in) {
@@ -91,6 +92,28 @@ JSValue::~JSValue(void) {
 
 JSValue::JSValueType JSValue::Type(void) {
     return type;
+}
+
+std::string JSValue::TypeString(void) {
+    if (type == JS_NULL) {
+        return "null";
+    } else if (type == JS_BOOL) {
+        return "bool";
+    } else if (type == JS_INT) {
+        return "int";
+    } else if (type == JS_UINT) {
+        return "uint";
+    } else if (type == JS_DOUBLE) {
+        return "double";
+    } else if (type == JS_STRING) {
+        return "string";
+    } else if (type == JS_ARRAY) {
+        return "array";
+    } else if (type == JS_OBJECT) {
+        return "object";
+    } else if (type == JS_FUNCTION) {
+        return "function";
+    }
 }
 
 
@@ -292,19 +315,30 @@ std::string JSFunction::SetName(std::string _name) {
     name = _name;
 }
 
-bool JSFunction::Execute(const CefString &name, CefRefPtr<CefV8Value> object,
+JSValue *JSFunction::Call(std::string name, JSObjectValue *obj_this,
+                          std::vector<JSValue *> parameters, std::string exception) {
+    return new JSValue();
+}
+
+bool JSFunction::Execute(const CefString &_name, CefRefPtr<CefV8Value> object,
                          const CefV8ValueList &arguments, CefRefPtr<CefV8Value> &retval,
                          CefString &exception) {
-    std::string converted_name = name.ToString();
+    std::string converted_name = _name.ToString();
+    if (converted_name != name) {
+        return false;
+    }
+
     JSValue *this_obj = ConvertCefToJSValue(object);
     std::vector<JSValue *> parameters;
     for (int i = 0; i < arguments.size(); i++) {
         parameters.push_back(ConvertCefToJSValue(arguments[i]));
     }
-    JSValue *return_value;
     std::string return_exception;
-    Call(converted_name, static_cast<JSObjectValue *>(this_obj),
-         parameters, return_value, return_exception);
+    JSValue *return_value = Call(converted_name, static_cast<JSObjectValue *>(this_obj),
+                                 parameters, return_exception);
+    if (return_value == nullptr) {
+        return_value = new JSValue();
+    }
     retval = ConvertJSValueToCef(return_value);
     exception = CefString(return_exception);
 

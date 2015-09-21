@@ -147,6 +147,20 @@ std::string ShaderShaderLog(unsigned int shader_object_id){
     return out;
 }
 
+class MyJSFunction : public JSFunction {
+    public:
+        MyJSFunction(void) : JSFunction("test_function") {
+            //
+        }
+
+        JSValue *Call(std::string _name, JSObjectValue *obj_this,
+                      std::vector<JSValue *> parameters, std::string exception) {
+            return new JSStringValue("Darf-snarf!");
+        }
+
+    private:
+};
+
 int main(int argc, char **argv) {
     RenderProcessHandlerValues values;
 
@@ -161,6 +175,7 @@ int main(int argc, char **argv) {
 
     JSObjectValue *obj = new JSObjectValue();
     obj->Set("sub_value", new JSStringValue("Weeeeeeeeeee Object Sub-Value"));
+    obj->Set("test_function", new MyJSFunction());
     values["test_obj"] = obj;
 
     int code = HUIOS::Init(argc, argv, values);
