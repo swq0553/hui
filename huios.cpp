@@ -3,9 +3,9 @@
 
 #include <iostream>
 
-int HUIOS::Init(int argc, char **argv) {
+int HUIOS::Init(int argc, char **argv, RenderProcessHandlerValues _values) {
     CefMainArgs args(argc, argv);
-    CefRefPtr<App> app(new App(new RenderProcessHandler()));
+    CefRefPtr<App> app(new App(new RenderProcessHandler(_values)));
     int exit_code = CefExecuteProcess(args, app.get(), NULL);
     if (exit_code >= 0) {
         return exit_code;

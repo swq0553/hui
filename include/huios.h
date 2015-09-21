@@ -5,6 +5,7 @@
 
 #include "browser_client.h"
 #include "render_handler.h"
+#include "render_process_handler.h"
 
 class HUIOS;
 
@@ -20,7 +21,7 @@ class HUIOS {
             MB_FORWARD
         };
 
-        static int Init(int argc, char **argv);
+        static int Init(int argc, char **argv, RenderProcessHandlerValues _values);
         static void Shutdown(void);
 
         HUIOS(unsigned int _window_handle, RenderHandler *_render_handler = nullptr);
