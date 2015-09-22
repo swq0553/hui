@@ -199,7 +199,7 @@ int main(int argc, char **argv) {
     huios->RegisterRoute(new MyRESTRoute());
     huios->RegisterRoute(new MyJSONRESTRoute());
     huios->Reshape(1280, 720);
-    huios->Load("file:///home/douglas/Projects/huios/examples/basic/assets/index.html");
+    huios->Load("examples/basic/assets/index.html");
 
     // Enable Z-buffer read and write
     glDisable(GL_DEPTH_TEST);

@@ -1,8 +1,7 @@
 <html>
   <head>
     <title>Weeee</title>
-    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <!--<script src="jquery-2.1.4.min.js"></script>-->
+    <script src="jquery-2.1.4.js"></script>
     <style>
       body {
         /*background-color: transparent;*/
@@ -11,40 +10,55 @@
         font-weight: bold;
         font-family: sans-serif;
       }
+
+      #left_side {
+        display: inline-block;
+        width: 400px;
+      }
+
+      #right_side {
+        display: inline-block;
+      }
     </style>
   </head>
   <body>
-    <h2>Tester</h2>
-    <div><button id="go">GO</button></div>
+    <div id="left_side">
+      <h2>Tester</h2>
+      <div><button id="go">GO</button></div>
 
-    <h3>Route</h3>
-    <div id="route_result"></div>
+      <h3>Route</h3>
+      <div id="route_result"></div>
 
-    <h3>REST Route</h3>
-    <div id="rest_result0"></div>
-    <div id="rest_result1"></div>
-    <div id="rest_result2"></div>
-    <div id="rest_result3"></div>
-    <div id="rest_result4"></div>
+      <h3>REST Route</h3>
+      <div id="rest_result0"></div>
+      <div id="rest_result1"></div>
+      <div id="rest_result2"></div>
+      <div id="rest_result3"></div>
+      <div id="rest_result4"></div>
 
-    <h3>JSON REST Route</h3>
-    <div id="json_result0"></div>
-    <div id="json_result1"></div>
-    <div id="json_result2"></div>
-    <div id="json_result3"></div>
-    <div id="json_result4"></div>
+      <h3>JSON REST Route</h3>
+      <div id="json_result0"></div>
+      <div id="json_result1"></div>
+      <div id="json_result2"></div>
+      <div id="json_result3"></div>
+      <div id="json_result4"></div>
 
-    <h3>Injected JS Values</h3>
-    <div id="injected_result0"></div>
-    <div id="injected_result1"></div>
-    <div id="injected_result2"></div>
-    <div id="injected_result3"></div>
+      <h3>Injected JS Values</h3>
+      <div id="injected_result0"></div>
+      <div id="injected_result1"></div>
+      <div id="injected_result2"></div>
+      <div id="injected_result3"></div>
 
-    <h3>WebSocket Communication</h3>
-    <div id="websocket_result">TODO!</div>
+      <h3>WebSocket Communication</h3>
+      <div id="websocket_result">TODO!</div>
 
-    <h3>External JS Execution</h3>
-    <div id="external_js_result">TODO!</div>
+      <h3>External JS Execution</h3>
+      <div id="external_js_result">TODO!</div>
+    </div>
+
+    <div id="right_side">
+      <img src="logo.png" />
+    </div>
 
     <script>
       $(document).ready(function() {

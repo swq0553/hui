@@ -50,7 +50,7 @@ class Tests : public Test::Suite {
         void setup(void) {
             hui = new HUI::HUI(0, render_handler);
             //hui->Reshape(1280, 720);
-            //hui->Load("file:///home/douglas/Projects/huios/tests/assets/index.html");
+            //hui->Load("tests/assets/index.html");
         }
 
         void tear_down(void) {

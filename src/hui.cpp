@@ -1,6 +1,13 @@
 #include "include/hui.h"
 #include "include/browser_app.h"
 
+#ifdef _WIN32
+    #include <direct.h>
+    #define getcwd _getcwd // stupid MSFT "deprecation" warning
+#else
+    #include <unistd.h>
+#endif
+
 #include <iostream>
 
 namespace HUI {
@@ -26,6 +33,7 @@ namespace HUI {
     }
 
     HUI::HUI(unsigned int _window_handle, RenderHandler *_render_handler) {
+        GetRunningDirectory();
         window_handle = _window_handle;
 
         // Per GUI init stuff
@@ -41,12 +49,22 @@ namespace HUI {
                                                     "", browser_settings, nullptr);
     }
 
+    void HUI::GetRunningDirectory(void) {
+        running_directory = getcwd(NULL, 0);
+        running_directory = "file://" + running_directory;
+        if (running_directory[running_directory.size() - 1] != '/') {
+            running_directory += "/";
+        }
+
+        std::cout << "Running Directory: " << running_directory << std::endl;
+    }
+
     void HUI::VisitDOM(CefRefPtr<CefDOMVisitor> visitor) {
         browser->GetMainFrame()->VisitDOM(visitor);
     }
 
     void HUI::Load(const char* url) {
-        browser->GetMainFrame()->LoadURL(url);
+        browser->GetMainFrame()->LoadURL(running_directory + url);
     }
 
     void HUI::Update(void) {

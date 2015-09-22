@@ -53,6 +53,9 @@ namespace HUI {
             CefRefPtr<BrowserClient> client;
 
             RenderHandler* renderHandler;
+
+            std::string running_directory;
+            void GetRunningDirectory(void);
     };
 
 }
