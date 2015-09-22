@@ -41,6 +41,7 @@ namespace HUI {
             //        void KeyRelease(int key);
 
             void ExecuteJS(const char*);
+            void VisitDOM(CefRefPtr<CefDOMVisitor> visitor);
 
             void RegisterRoute(Route *route);
 

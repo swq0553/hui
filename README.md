@@ -12,7 +12,20 @@ sudo cp libcef.so /lib/x86_64-linux-gnu/
 sudo cp libffmpegsumo.so /lib/x86_64-linux-gnu/
 ```
 
+Files Needed from CEF3 Build:
+- locales/
+- cef.pak
+- cef_100_percent.pak
+- cef_200_percent.pak
+- chrome-sandbox (mentioned above)
+- devtools_resources.pak
+- icudtl.dat
+- libcef.so (mentioned above)
+- libffmpegsumo.so (mentioned above)
+- natives_blob.bin
+- snapshot_blob.bin
+
 TODO:
 - [x] Custom Routed Requset Handlers (Route, RESTRoute, JSONRESTRoute)
 - [x] Injected Javascript Objects - https://bitbucket.org/chromiumembedded/cef/wiki/JavaScriptIntegration
-- [ ] Websocket Interface
+- [ ] Websocket Handshake Interface

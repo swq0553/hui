@@ -37,7 +37,12 @@ namespace HUI {
         renderHandler = _render_handler;
 
         client = new BrowserClient(renderHandler);
-        browser = CefBrowserHost::CreateBrowserSync(windowInfo, client.get(), "", browser_settings, nullptr);
+        browser = CefBrowserHost::CreateBrowserSync(windowInfo, client.get(),
+                                                    "", browser_settings, nullptr);
+    }
+
+    void HUI::VisitDOM(CefRefPtr<CefDOMVisitor> visitor) {
+        browser->GetMainFrame()->VisitDOM(visitor);
     }
 
     void HUI::Load(const char* url) {

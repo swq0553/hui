@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <title>Weeee</title>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <!--<script src="jquery-2.1.4.min.js"></script>-->
+    <style>
+      body {
+        /*background-color: transparent;*/
+        color: white;
+        font-size: 14px;
+        font-weight: bold;
+        font-family: sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+
+    <h3>Injected JS Values</h3>
+    <div id="injected_null"></div>
+    <div id="injected_bool"></div>
+    <div id="injected_int"></div>
+    <div id="injected_negative_int"></div>
+    <div id="injected_uint"></div>
+    <div id="injected_double"></div>
+    <div id="injected_string"></div>
+    <div id="injected_array"></div>
+    <div id="injected_object"></div>
+
+    <script>
+      $(document).ready(function() {
+        $("#injected_null").html((test_null === null) ? "NULL" : "Not NULL");
+        $("#injected_bool").html((test_bool === true) ? "true" : "false");
+        $("#injected_int").html(test_int.toString());
+        $("#injected_negative_int").html(test_negative_int.toString());
+        $("#injected_uint").html(test_uint.toString());
+        $("#injected_double").html(test_double.toString());
+        $("#injected_string").html(test_string);
+        $("#injected_array").html(test_array[0].toString() + test_array[1].toString() + test_array[2]);
+        $("#injected_object").html(test_object.sub_int.toString() + test_object.sub_string);
+      });
+    </script>
+  </body>
+</html>
