@@ -164,4 +164,8 @@ namespace HUI {
         static_cast<RequestHandler *>(client->GetRequestHandler().get())->RegisterRoute(route);
     }
 
+    bool HUI::IsSiteLoaded(void) {
+        return client->IsSiteLoaded();
+    }
+
 }

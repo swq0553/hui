@@ -61,6 +61,10 @@
     </div>
 
     <script>
+      function execute_me() {
+          $("#external_js_result").html("External JS Function Called!");
+      }
+
       $(document).ready(function() {
         $("#go").on("click", function() {
           $.get("http://huios.internal/basic_html", function(response) {
@@ -136,6 +140,18 @@
           $("#injected_result1").html(test_array[0] + ", " + test_array[1] + ", " + test_array[2]);
           $("#injected_result2").html(test_obj.sub_value);
           $("#injected_result3").html("Return Value: " + test_obj.test_function("test"));
+
+//           var websocket = new WebSocket("ws://localhost/", ["xmpp"]);
+//           websocket.onopen = function() {
+//             console.log("Websocket Open");
+//           };
+//           websocket.onerror = function(error) {
+//             console.log("Websocket Error: " + error);
+//           };
+//           websocket.onmessage = function(event) {
+//             console.log("Msg Received: " + event.data);
+//           };
+//           websocket.send("Weeee");
         });
       });
     </script>

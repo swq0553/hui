@@ -304,6 +304,8 @@ int main(int argc, char **argv) {
     glm::mat4 view_matrix = glm::mat4(1.0f);
     glm::mat4 model_matrix = glm::scale(glm::mat4(1.0f), glm::vec3(1280.0, 720.0, 1.0));
 
+    bool function_called = false;
+
     // Start game loop
     while (window.isOpen()) {
         // Process events
@@ -339,18 +341,15 @@ int main(int argc, char **argv) {
                 huios->MouseButtonRelease(HUI::HUI::MB_LEFT);
             }
 
-//            if (event.type == sf::Event::KeyPressed) {
-//                huios->KeyPress(event.key.code);
-//            }
-
-//            if (event.type == sf::Event::KeyReleased) {
-//                huios->KeyRelease(event.key.code);
-//            }
-
             if (event.type == sf::Event::TextEntered) {
                 huios->KeyChar(event.text.unicode);
             }
-       }
+        }
+
+        if (huios->IsSiteLoaded() && !function_called) {
+            huios->ExecuteJS("execute_me();");
+            function_called = true;
+        }
 
         // Clear the depth buffer
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);

@@ -45,6 +45,8 @@ namespace HUI {
 
             void RegisterRoute(Route *route);
 
+            bool IsSiteLoaded(void);
+
         private:
             int mouseX, mouseY;
             unsigned int window_handle;
