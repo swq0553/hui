@@ -178,6 +178,9 @@ int main(int argc, char **argv) {
     obj->Set("test_function", new MyJSFunction());
     values["test_obj"] = obj;
 
+    int resolution_width = 1280;
+    int resolution_height = 720;
+
     int code = HUI::HUI::Init(argc, argv, values);
     if (code >= 0) {
         return code;
@@ -188,7 +191,7 @@ int main(int argc, char **argv) {
     contextSettings.depthBits = 24;
 
     // Create the main window
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "SFML graphics with OpenGL", sf::Style::Default, contextSettings);
+    sf::RenderWindow window(sf::VideoMode(resolution_width, resolution_height), "SFML graphics with OpenGL", sf::Style::Default, contextSettings);
     window.setVerticalSyncEnabled(true);
     window.setActive();
 
@@ -198,7 +201,7 @@ int main(int argc, char **argv) {
     huios->RegisterRoute(new MyRoute());
     huios->RegisterRoute(new MyRESTRoute());
     huios->RegisterRoute(new MyJSONRESTRoute());
-    huios->Reshape(1280, 720);
+    huios->Reshape(resolution_width, resolution_height);
     huios->Load("examples/basic/assets/index.html");
 
     // Enable Z-buffer read and write
@@ -319,6 +322,9 @@ int main(int argc, char **argv) {
             // Adjust the viewport when the window is resized
             if (event.type == sf::Event::Resized) {
                 glViewport(0, 0, event.size.width, event.size.height);
+                huios->Reshape(event.size.width, event.size.height);
+                projection_matrix = glm::ortho(0.0f, float(event.size.width), 0.0f, float(event.size.height));
+                model_matrix = glm::scale(glm::mat4(1.0f), glm::vec3(float(event.size.width), float(event.size.height), 1.0f));
             }
 
             if (event.type == sf::Event::MouseMoved) {

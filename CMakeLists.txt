@@ -8,6 +8,7 @@ add_definitions(-pg -Wall -ggdb -std=c++11)
 include_directories(/usr/local/ /usr/local/include/ ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 set(EXTLIBS sfml-graphics sfml-window sfml-system sfml-audio sfml-network GL
     GLEW glut GLU Xrandr cef cef_dll_wrapper cpptest)
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build")
 
 set(SRCS
     ./include/hui.h

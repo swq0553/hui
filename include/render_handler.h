@@ -1,6 +1,7 @@
 #ifndef RENDER_HANDLER_H
 #define RENDER_HANDLER_H
 
+#include <mutex>
 #include "cef_render_handler.h"
 
 namespace HUI {
@@ -24,6 +25,7 @@ namespace HUI {
             int paint_width;
             int paint_height;
             unsigned char *paint_buffer;
+            std::mutex paint_info_lock;
 
             IMPLEMENT_REFCOUNTING(RenderHandler);
     };
