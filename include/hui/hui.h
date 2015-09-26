@@ -26,7 +26,7 @@ namespace HUI {
             static int Init(int argc, char **argv, RenderProcessHandlerValues _values);
             static void Shutdown(void);
 
-            HUI(unsigned int _window_handle, RenderHandler *_render_handler = nullptr);
+            HUI(unsigned int _window_handle);
 
             void Load(const char*);
             void Update(void);
@@ -46,6 +46,11 @@ namespace HUI {
             void RegisterRoute(Route *route);
 
             bool IsSiteLoaded(void);
+
+            bool IsDirty(void);
+            int GetPaintWidth(void);
+            int GetPaintHeight(void);
+            unsigned char *GetPaintBuffer(void);
 
         private:
             int mouseX, mouseY;

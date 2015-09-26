@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include "include/render_handler.h"
+#include "hui/render_handler.h"
 
 namespace HUI {
 
@@ -10,6 +10,7 @@ namespace HUI {
         paint_width = 800;
         paint_height = 500;
         paint_buffer = nullptr;
+        is_dirty = false;
     }
 
     void RenderHandler::Reshape(unsigned int _width, unsigned int _height) {
@@ -31,11 +32,36 @@ namespace HUI {
         paint_width = _paint_width;
         paint_height = _paint_height;
         paint_buffer = static_cast<unsigned char *>(const_cast<void *>(_paint_buffer));
-        Draw();
+        is_dirty = true;
     }
 
-    void RenderHandler::Draw(void) {
-        std::cout << "Drawing Here?" << std::endl;
+    unsigned int RenderHandler::GetWidth(void) {
+        return width;
     }
+
+    unsigned int RenderHandler::GetHeight(void) {
+        return height;
+    }
+
+    int RenderHandler::GetPaintWidth(void) {
+        return paint_width;
+    }
+
+    int RenderHandler::GetPaintHeight(void) {
+        return paint_height;
+    }
+
+    unsigned char *RenderHandler::GetPaintBuffer(void) {
+        return paint_buffer;
+    }
+
+    bool HUI::RenderHandler::IsDirty(void) {
+        if (is_dirty) {
+            is_dirty = false;
+            return true;
+        }
+        return false;
+    }
+
 
 }

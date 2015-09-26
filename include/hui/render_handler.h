@@ -18,13 +18,20 @@ namespace HUI {
                          const void *_paint_buffer,
                          int _paint_width,
                          int _paint_height);
-            virtual void Draw(void);
+
+            unsigned int GetWidth(void);
+            unsigned int GetHeight(void);
+            int GetPaintWidth(void);
+            int GetPaintHeight(void);
+            unsigned char *GetPaintBuffer(void);
+            bool IsDirty(void);
         protected:
             unsigned int width;
             unsigned int height;
             int paint_width;
             int paint_height;
             unsigned char *paint_buffer;
+            bool is_dirty;
             std::mutex paint_info_lock;
 
             IMPLEMENT_REFCOUNTING(RenderHandler);

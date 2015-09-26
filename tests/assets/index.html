@@ -26,7 +26,7 @@
     <div id="injected_object"></div>
 
     <script>
-      $(document).ready(function() {
+      function kickoff() {
         $("#injected_null").html((test_null === null) ? "NULL" : "Not NULL");
         $("#injected_bool").html((test_bool === true) ? "true" : "false");
         $("#injected_int").html(test_int.toString());
@@ -36,6 +36,9 @@
         $("#injected_string").html(test_string);
         $("#injected_array").html(test_array[0].toString() + test_array[1].toString() + test_array[2]);
         $("#injected_object").html(test_object.sub_int.toString() + test_object.sub_string);
+      }
+      $(document).ready(function() {
+        //
       });
     </script>
   </body>

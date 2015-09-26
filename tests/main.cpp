@@ -1,7 +1,7 @@
 #include <iostream>
 #include "cpptest.h"
-#include "include/hui.h"
-
+#include "hui/hui.h"
+/*
 class TestRenderHandler : public HUI::RenderHandler {
     public:
         TestRenderHandler(void) {
@@ -27,10 +27,11 @@ class TestRenderHandler : public HUI::RenderHandler {
         unsigned char *GetBuffer(void) {
             return paint_buffer;
         }
-};
+};*/
 
 class DOMVisitor : public CefDOMVisitor {
     public:
+
         void Visit(CefRefPtr<CefDOMDocument> document) {
             std::cout << "Visiting DOM" << std::endl;
         }
@@ -42,30 +43,39 @@ class DOMVisitor : public CefDOMVisitor {
 
 class Tests : public Test::Suite {
     public:
-        Tests(void) {
+        Tests(HUI::HUI *_hui, DOMVisitor *_visitor) {
+            hui = _hui;
+            visitor = _visitor;
+
             TEST_ADD(Tests::test_js_values);
-        }
-
-    protected:
-        void setup(void) {
-            hui = new HUI::HUI(0, render_handler);
-            //hui->Reshape(1280, 720);
-            //hui->Load("tests/assets/index.html");
-        }
-
-        void tear_down(void) {
-            delete hui;
+            TEST_ADD(Tests::test_dom_changes);
         }
 
     private:
         void test_js_values(void) {
-            //hui->VisitDOM(CefRefPtr<CefDOMVisitor>(&visitor));
-            TEST_ASSERT(true);
+            // TODO: Has to be done on a different thread.
+//             CefRefPtr<CefV8Value> cef_bool = CefV8Value::CreateBool(true);
+//             TEST_ASSERT(cef_bool->IsBool());
+
+//             HUI::JSBoolValue *js_true_bool = new HUI::JSBoolValue(true);
+//             CefRefPtr<CefV8Value> result = HUI::ConvertJSValueToCef(js_true_bool);
+//             TEST_ASSERT(result->IsBool());
+//             TEST_ASSERT(result->GetBoolValue());
+
+//             HUI::JSBoolValue *js_false_bool = new HUI::JSBoolValue(false);
+//             CefRefPtr<CefV8Value> result2 = HUI::ConvertJSValueToCef(js_false_bool);
+//             TEST_ASSERT(result2->IsBool());
+//             TEST_ASSERT(result2->GetBoolValue() == false);
         }
 
-        TestRenderHandler *render_handler;
+        void test_dom_changes(void) {
+            // TODO: Has to be done on a different thread.
+//             hui->ExecuteJS("kickoff();");
+//             hui->VisitDOM(visitor);
+        }
+
+        DOMVisitor *visitor;
         HUI::HUI *hui;
-        //DOMVisitor visitor;
 };
 
 int main(int argc, char **argv) {
@@ -96,8 +106,13 @@ int main(int argc, char **argv) {
         return code;
     }
 
+    DOMVisitor *visitor = new DOMVisitor();
+    HUI::HUI *hui = new HUI::HUI(0);
+    hui->Reshape(1280, 720);
+    hui->Load("tests/assets/index.html");
+
     Test::TextOutput output(Test::TextOutput::Verbose);
-    Tests tests;
+    Tests tests(hui, visitor);
 
     int return_code = tests.run(output) ? EXIT_SUCCESS : EXIT_FAILURE;
 

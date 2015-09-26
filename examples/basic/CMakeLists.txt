@@ -1,5 +1,5 @@
 project(hui)
 include_directories(/usr/local/ /usr/local/include/ ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
-add_executable(hui_basic main.cpp gl_render_handler.h gl_render_handler.cpp)
+add_executable(hui_basic main.cpp)
 add_dependencies(hui_basic cef_dll_wrapper)
-target_link_libraries(hui_basic hui ${EXTLIBS})
+target_link_libraries(hui_basic optimized hui ${EXTLIBS})

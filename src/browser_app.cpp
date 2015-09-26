@@ -1,4 +1,4 @@
-#include "include/browser_app.h"
+#include "hui/browser_app.h"
 
 namespace HUI {
 

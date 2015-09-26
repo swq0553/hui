@@ -18,9 +18,9 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
 
-#include "include/hui.h"
+#include "hui/hui.h"
 
-#include "gl_render_handler.h"
+// #include "gl_render_handler.h"
 
 
 class MyRoute : public HUI::Route {
@@ -196,13 +196,15 @@ int main(int argc, char **argv) {
     window.setActive();
 
     // HUIOS Init
-    GLRenderHandler *render_handler = new GLRenderHandler();
-    HUI::HUI *huios = new HUI::HUI(window.getSystemHandle(), render_handler);
+    HUI::HUI *huios = new HUI::HUI(window.getSystemHandle());
     huios->RegisterRoute(new MyRoute());
     huios->RegisterRoute(new MyRESTRoute());
     huios->RegisterRoute(new MyJSONRESTRoute());
     huios->Reshape(resolution_width, resolution_height);
     huios->Load("examples/basic/assets/index.html");
+
+    GLuint gui_texture;
+    glGenTextures(1, &gui_texture);
 
     // Enable Z-buffer read and write
     glDisable(GL_DEPTH_TEST);
@@ -356,10 +358,21 @@ int main(int argc, char **argv) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         huios->Update();
-        huios->Draw();
+        //huios->Draw();
+
+        if (huios->IsDirty()) {
+            glEnable(GL_TEXTURE_2D);
+            glBindTexture(GL_TEXTURE_2D, gui_texture);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, huios->GetPaintWidth(), huios->GetPaintHeight(),
+                0, GL_RGBA, GL_UNSIGNED_BYTE, huios->GetPaintBuffer());
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        }
 
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, render_handler->GetTextureHandle());
+        glBindTexture(GL_TEXTURE_2D, gui_texture);
         glUniform1i(gui_texture_location, 0);
         glUniformMatrix4fv(projection_matrix_location, 1, GL_FALSE, (float *)(glm::value_ptr(projection_matrix)));
         glUniformMatrix4fv(view_matrix_location, 1, GL_FALSE, (float *)(glm::value_ptr(view_matrix)));

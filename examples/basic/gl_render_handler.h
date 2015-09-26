@@ -8,8 +8,8 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "include/render_handler.h"
-
+// #include "hui/render_handler.h"
+/*
 class GLRenderHandler : public HUI::RenderHandler {
 public:
     GLRenderHandler(void);
@@ -20,6 +20,6 @@ public:
 
 private:
     GLuint texture_handle;
-};
+};*/
 
 #endif // GL_RENDER_HANDLER_H

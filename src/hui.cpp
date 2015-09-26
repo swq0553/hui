@@ -1,5 +1,5 @@
-#include "include/hui.h"
-#include "include/browser_app.h"
+#include "hui/hui.h"
+#include "hui/browser_app.h"
 
 #ifdef _WIN32
     #include <direct.h>
@@ -32,7 +32,7 @@ namespace HUI {
         CefShutdown();
     }
 
-    HUI::HUI(unsigned int _window_handle, RenderHandler *_render_handler) {
+    HUI::HUI(unsigned int _window_handle) {
         GetRunningDirectory();
         window_handle = _window_handle;
 
@@ -42,7 +42,7 @@ namespace HUI {
 
         windowInfo.SetAsWindowless(0, true);
 
-        renderHandler = _render_handler;
+        renderHandler = new RenderHandler();
 
         client = new BrowserClient(renderHandler);
         browser = CefBrowserHost::CreateBrowserSync(windowInfo, client.get(),
@@ -60,6 +60,7 @@ namespace HUI {
     }
 
     void HUI::VisitDOM(CefRefPtr<CefDOMVisitor> visitor) {
+        std::cout << "About to visit DOM hopefully!" << std::endl;
         browser->GetMainFrame()->VisitDOM(visitor);
     }
 
@@ -73,7 +74,7 @@ namespace HUI {
     }
 
     void HUI::Draw(void) {
-        renderHandler->Draw();
+        //renderHandler->Draw();
     }
 
     void HUI::Reshape(int w, int h) {
@@ -166,6 +167,22 @@ namespace HUI {
 
     bool HUI::IsSiteLoaded(void) {
         return client->IsSiteLoaded();
+    }
+
+    bool HUI::IsDirty(void) {
+        return renderHandler->IsDirty();
+    }
+
+    int HUI::GetPaintWidth(void) {
+        return renderHandler->GetPaintWidth();
+    }
+
+    int HUI::GetPaintHeight(void) {
+        return renderHandler->GetPaintHeight();
+    }
+
+    unsigned char *HUI::GetPaintBuffer(void) {
+        return renderHandler->GetPaintBuffer();
     }
 
 }
