@@ -287,6 +287,7 @@ namespace HUI {
                                                            static_cast<void*>(const_cast<char*>(content)), content_size);
             CefResponse::HeaderMap headers;
             headers.insert(std::pair<CefString, CefString>("Access-Control-Allow-Origin", "*"));
+            headers.insert(std::pair<CefString, CefString>("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"));
             headers.insert(std::pair<CefString, CefString>("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, PATCH, DELETE"));
 
             return new CefStreamResourceHandler(200, "200 OK", result->GetMimeType(), headers, result_stream);
